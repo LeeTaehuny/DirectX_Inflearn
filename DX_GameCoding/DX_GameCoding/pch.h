@@ -19,7 +19,7 @@
 // DX
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include <wrl.h>
+#include <wrl.h>					// ComPtr 를 사용하기 위함
 #include <DirectXMath.h>
 
 // DX 추가 포함 디렉터리 설정 후 DirectXTex 헤더 불러오기
@@ -27,7 +27,7 @@
 #include <DirectXTex/DirectXTex.inl>
 
 using namespace DirectX;
-using namespace Microsoft::WRL;
+using namespace Microsoft::WRL;		// ComPtr 를 사용하기 위함
 
 // 라이브러리를 사용하겠다고 설정하기
 #pragma comment(lib, "d3d11.lib")
@@ -41,3 +41,6 @@ using namespace Microsoft::WRL;
 #else
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
 #endif
+
+// assertion 체크
+#define CHECK(p) assert(SUCCEEDED(p));
