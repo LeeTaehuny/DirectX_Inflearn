@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class Game
 {
@@ -7,18 +7,18 @@ public:
 	~Game();
 
 public:
-	// ÃÊ±âÈ­ ÇÔ¼ö¸¦ ¼±¾ðÇÕ´Ï´Ù.
+	// ì´ˆê¸°í™” í•¨ìˆ˜ë¥¼ ì„ ì–¸í•©ë‹ˆë‹¤.
 	void	Init(HWND hwnd);
-	// ¾÷µ¥ÀÌÆ® ÇÔ¼ö¸¦ ¼±¾ðÇÕ´Ï´Ù.
+	// ì—…ë°ì´íŠ¸ í•¨ìˆ˜ë¥¼ ì„ ì–¸í•©ë‹ˆë‹¤.
 	void	Update();
-	// ·»´õ ÇÔ¼ö¸¦ ¼±¾ðÇÕ´Ï´Ù.
+	// ë Œë” í•¨ìˆ˜ë¥¼ ì„ ì–¸í•©ë‹ˆë‹¤.
 	void	Render();
 
 private:
-	// À©µµ¿ì ÇÚµé ¹øÈ£¸¦ ÀúÀåÇÏ±â À§ÇÑ º¯¼ö¸¦ ¼±¾ðÇÕ´Ï´Ù.
+	// ìœˆë„ìš° í•¸ë“¤ ë²ˆí˜¸ë¥¼ ì €ìž¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ë¥¼ ì„ ì–¸í•©ë‹ˆë‹¤.
 	HWND	_hwnd;
 
-	// À©µµ¿ì Ã¢ Å©±â¸¦ ÀúÀåÇÏ±â À§ÇÑ º¯¼ö¸¦ ¼±¾ðÇÕ´Ï´Ù.
+	// ìœˆë„ìš° ì°½ í¬ê¸°ë¥¼ ì €ìž¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ë¥¼ ì„ ì–¸í•©ë‹ˆë‹¤.
 	uint32	_width = 0;
 	uint32	_height = 0;
 

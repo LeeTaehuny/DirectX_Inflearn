@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// ÀÚ·áÇüµéÀ» Æí¸®ÇÏ°Ô »ç¿ëÇÒ ¼ö ÀÖµµ·Ï ÀÌ¸§À» ÀçÁ¤ÀÇÇÏ´Â Çì´õÀÔ´Ï´Ù.
+// ìžë£Œí˜•ë“¤ì„ íŽ¸ë¦¬í•˜ê²Œ ì‚¬ìš©í•  ìˆ˜ ìžˆë„ë¡ ì´ë¦„ì„ ìž¬ì •ì˜í•˜ëŠ” í—¤ë”ìž…ë‹ˆë‹¤.
 
 #include "DirectXMath.h"
 

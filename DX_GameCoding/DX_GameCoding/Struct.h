@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Types.h"
 
-// °ø¿ëÀ¸·Î »ç¿ëÇÒ ±¸Á¶Ã¼µéÀ» ÀúÀåÇÏ±â À§ÇÑ Çì´õÀÔ´Ï´Ù. 
+// ê³µìš©ìœ¼ë¡œ ì‚¬ìš©í•  êµ¬ì¡°ì²´ë“¤ì„ ì €ìž¥í•˜ê¸° ìœ„í•œ í—¤ë”ìž…ë‹ˆë‹¤. 

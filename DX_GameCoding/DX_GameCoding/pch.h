@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// ÀÚÁÖ »ç¿ëÇÒ Çì´õµéÀ» ¹Ì¸® ÄÄÆÄÀÏÇÏ±â À§ÇÑ Çì´õÀÔ´Ï´Ù.
+// ìì£¼ ì‚¬ìš©í•  í—¤ë”ë“¤ì„ ë¯¸ë¦¬ ì»´íŒŒì¼í•˜ê¸° ìœ„í•œ í—¤ë”ì…ë‹ˆë‹¤.
 
 #include "Types.h"
 #include "Struct.h"
@@ -22,22 +22,22 @@
 #include <wrl.h>
 #include <DirectXMath.h>
 
-// DX Ãß°¡ Æ÷ÇÔ µğ·ºÅÍ¸® ¼³Á¤ ÈÄ DirectXTex Çì´õ ºÒ·¯¿À±â
+// DX ì¶”ê°€ í¬í•¨ ë””ë ‰í„°ë¦¬ ì„¤ì • í›„ DirectXTex í—¤ë” ë¶ˆëŸ¬ì˜¤ê¸°
 #include <DirectXTex/DirectXTex.h>
 #include <DirectXTex/DirectXTex.inl>
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-// ¶óÀÌºê·¯¸®¸¦ »ç¿ëÇÏ°Ú´Ù°í ¼³Á¤ÇÏ±â
+// ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì‚¬ìš©í•˜ê² ë‹¤ê³  ì„¤ì •í•˜ê¸°
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-// ´Ù¿î¹ŞÀº ¶óÀÌºê·¯¸®µµ »ç¿ëÇÏ°Ú´Ù°í ¼³Á¤ÇÏ±â
-// * Debug ¸ğµåÀÎ °æ¿ì
+// ë‹¤ìš´ë°›ì€ ë¼ì´ë¸ŒëŸ¬ë¦¬ë„ ì‚¬ìš©í•˜ê² ë‹¤ê³  ì„¤ì •í•˜ê¸°
+// * Debug ëª¨ë“œì¸ ê²½ìš°
 #ifdef _DEBUG
 #pragma comment(lib, "DirectXTex\\DirectXTex_Debug.lib")
-// * Debug ¸ğµå°¡ ¾Æ´Ñ °æ¿ì
+// * Debug ëª¨ë“œê°€ ì•„ë‹Œ ê²½ìš°
 #else
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
 #endif

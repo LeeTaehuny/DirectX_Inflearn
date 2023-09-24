@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Game.h"
 
 Game::Game()
@@ -11,7 +11,7 @@ Game::~Game()
 
 void Game::Init(HWND hwnd)
 {
-	// ¸â¹ö º¯¼ö ÃÊ±âÈ­
+	// ë©¤ë²„ ë³€ìˆ˜ ì´ˆê¸°í™”
 	_hwnd = hwnd;
 	_width = GWinSizeX;
 	_height = GWinSizeY;
