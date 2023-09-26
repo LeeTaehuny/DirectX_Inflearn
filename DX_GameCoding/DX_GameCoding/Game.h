@@ -44,6 +44,10 @@ private:
 	// PS를 생성하기 위한 함수를 선언합니다.
 	void	CreatePS();
 
+	// SRV(셰이더-리소스-뷰)를 생성하기 위한 함수를 선언합니다.
+	// * SRV : 셰이더에 리소스로 사용할 수 있는 뷰
+	void	CreateSRV();
+
 	// 셰이더는 파일을 로드하는 방식으로 만들어줘야 합니다.
 	// * 공용으로 셰이더를 파일로부터 로드하기 위한 함수를 선언합니다.
 	// * path : 경로
@@ -84,12 +88,13 @@ private:
 	// Geometry
 	// * 정점들을 저장하기 위한 벡터 컨테이너를 선언합니다.
 	vector<Vertex> _vertices;
-
-	// _vertices의 데이터들은 CPU의 메모리에 존재합니다.
-	// GPU의 메모리(VRAM)으로 옮겨줄 필요가 있습니다.
-	
 	// * 정점 정보들을 저장하기 위한 버퍼를 선언합니다.
 	ComPtr<ID3D11Buffer> _vertexBuffer = nullptr;
+
+	// * 인덱스들을 저장하기 위한 벡터 컨테이너를 선언합니다.
+	vector<uint32> _indices;
+	// * 인덱스 정보들을 저장하기 위한 버퍼를 선언합니다.
+	ComPtr<ID3D11Buffer> _indexBuffer = nullptr;
 
 	// * 입력 레이아웃을 저장하기 위한 변수를 선언합니다.
 	ComPtr<ID3D11InputLayout> _inputLayout = nullptr;
@@ -105,5 +110,10 @@ private:
 	ComPtr<ID3D11PixelShader> _pixelShader = nullptr;
 	// * 임의 길이 데이터를 반환하는 데 사용할 변수를 선언합니다.
 	ComPtr<ID3DBlob> _psBlob;
+
+	// SRV
+	// * 셰이더 리소스 뷰를 저장하기 위한 변수를 선언합니다.
+	ComPtr<ID3D11ShaderResourceView> _shaderResourceView = nullptr;
+	ComPtr<ID3D11ShaderResourceView> _shaderResourceView2 = nullptr;
 };
 

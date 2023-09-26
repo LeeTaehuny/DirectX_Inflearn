@@ -9,5 +9,8 @@ struct Vertex
 	// 위치 좌표 (x, y, z)
 	Vec3 position;
 	// 색상 정보 (R, G, B, A)
-	Color color;
+	//Color color;
+
+	// 텍스처 좌표 (u, v)
+	Vec2 uv;
 };

@@ -24,6 +24,8 @@ void Game::Init(HWND hwnd)
 	CreateVS();
 	CreateInputLayout();
 	CreatePS();
+
+	CreateSRV();
 }
 
 void Game::Update()
@@ -47,6 +49,8 @@ void Game::Render()
 
 			// 디바이스 컨텍스트를 이용해 IA에 정점 버퍼를 연결시켜줍니다.
 			_deviceContext->IASetVertexBuffers(0, 1, _vertexBuffer.GetAddressOf(), &stride, &offset);
+			// 디바이스 컨텍스트를 이용해 IA에 인덱스 버퍼를 연결시켜줍니다.
+			_deviceContext->IASetIndexBuffer(_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 			// 디바이스 컨텍스트를 이용해 IA에 InputLayout 정보를 연결시켜줍니다.
 			_deviceContext->IASetInputLayout(_inputLayout.Get());
 			// 삼각형(대부분 모든 사물은 삼각형으로 표현)을 그리는 과정에서 전달한 정점들을 어떤 순서로 이어 붙일 것인지에 대한 정보를 지정합니다. (topology)
@@ -68,6 +72,9 @@ void Game::Render()
 		{
 			// 디바이스 컨텍스트를 이용해 PS에 만든 셰이더를 연결시켜줍니다.
 			_deviceContext->PSSetShader(_pixelShader.Get(), nullptr, 0);
+			// 디바이스 컨텍스트를 이용해 PS에 만든 셰이더 리소스 뷰를 연결시켜줍니다.
+			_deviceContext->PSSetShaderResources(0, 1, _shaderResourceView.GetAddressOf());
+			_deviceContext->PSSetShaderResources(1, 1, _shaderResourceView2.GetAddressOf());
 		}
 
 		// OM
@@ -76,7 +83,7 @@ void Game::Render()
 		}
 
 		// 디바이스 컨텍스트를 이용해 해당 물체를 그려달라고 요청합니다.
-		_deviceContext->Draw(_vertices.size(), 0);
+		_deviceContext->DrawIndexed(_indices.size(), 0, 0);
 	}
 
 	// 최종 렌더 정보를 제출
@@ -193,20 +200,30 @@ void Game::SetViewport()
 
 void Game::CreateGeometry()
 {
-	// 3각형을 위한 Vertex Data
+	// 1 3
+	// 0 2
+
+	// Vertex Data
 	{
 		// 사이즈 조정
-		_vertices.resize(3);
+		_vertices.resize(4);
 
-		// 위치 정보와 색상 정보를 설정합니다.
+		// 위치 정보와 uv 좌표를 설정합니다.
 		_vertices[0].position = Vec3(-0.5f, -0.5f, 0.0f);
-		_vertices[0].color = Color(1.0f, 0.0f, 0.0f, 0.0f);		
+		_vertices[0].uv = Vec2(0.0f, 1.0f);
+		//_vertices[0].color = Color(1.0f, 0.0f, 0.0f, 1.0f);		
 
-		_vertices[1].position = Vec3(0.0f, 0.5f, 0.0f);
-		_vertices[1].color = Color(0.0f, 1.0f, 0.0f, 0.0f);
+		_vertices[1].position = Vec3(-0.5f, 0.5f, 0.0f);
+		_vertices[1].uv = Vec2(0.0f, 0.0f);
+		//_vertices[1].color = Color(1.0f, 0.0f, 0.0f, 1.0f);
 
 		_vertices[2].position = Vec3(0.5f, -0.5f, 0.0f);
-		_vertices[2].color = Color(0.0f, 0.0f, 1.0f, 0.0f);
+		_vertices[2].uv = Vec2(1.0f, 1.0f);
+		//_vertices[2].color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+
+		_vertices[3].position = Vec3(0.5f, 0.5f, 0.0f);
+		_vertices[3].uv = Vec2(1.0f, 0.0f);
+		//_vertices[3].color = Color(1.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	// VertexBuffer
@@ -228,7 +245,36 @@ void Game::CreateGeometry()
 		data.pSysMem = _vertices.data();
 
 		// 버퍼를 생성해줍니다. (_vertexBuffer에 결과물을 저장합니다.)
-		_device->CreateBuffer(&desc, &data, _vertexBuffer.GetAddressOf());
+		HRESULT hr = _device->CreateBuffer(&desc, &data, _vertexBuffer.GetAddressOf());
+		CHECK(hr);
+	}
+
+	// index
+	{
+		// 인덱스 컨테이너에 정보를 저장합니다.
+		// * 저장하는 방향은 일정해야 합니다.
+		_indices = { 0, 1, 2, 2, 1, 3 };
+	}
+
+	// indexBuffer
+	{
+		// 버퍼 생성에 사용될 DESC를 생성합니다.
+		D3D11_BUFFER_DESC desc;
+		ZeroMemory(&desc, sizeof(desc));
+
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+		// * D3D11_BIND_INDEX_BUFFER : IndexBuffer를 바인딩하는 용도로 사용하겠다고 설정
+		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		desc.ByteWidth = (uint32)sizeof(uint32) * _indices.size();
+
+		D3D11_SUBRESOURCE_DATA data;
+		ZeroMemory(&data, sizeof(data));
+		// 첫 번째 데이터의 시작 주소를 저장합니다.
+		data.pSysMem = _indices.data();
+
+		// 버퍼를 생성해줍니다. (_indexBuffer에 결과물을 저장합니다.)
+		HRESULT hr = _device->CreateBuffer(&desc, &data, _indexBuffer.GetAddressOf());
+		CHECK(hr);
 	}
 }
 
@@ -239,7 +285,7 @@ void Game::CreateInputLayout()
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	// layout의 개수를 저장합니다.
@@ -266,6 +312,29 @@ void Game::CreatePS()
 
 	// PS를 생성합니다.
 	HRESULT hr = _device->CreatePixelShader(_psBlob->GetBufferPointer(), _psBlob->GetBufferSize(), nullptr, _pixelShader.GetAddressOf());
+	CHECK(hr);
+}
+
+void Game::CreateSRV()
+{
+	DirectX::TexMetadata md;
+	DirectX::ScratchImage img;
+
+	DirectX::TexMetadata md2;
+	DirectX::ScratchImage img2;
+
+	// 이미지를 불러옵니다. (DirectXTex 라이브러리 사용)
+	HRESULT hr = ::LoadFromWICFile(L"test.png", WIC_FLAGS_NONE, &md, img);
+	CHECK(hr);
+
+	hr = ::LoadFromWICFile(L"test2.png", WIC_FLAGS_NONE, &md2, img2);
+	CHECK(hr);
+
+	// SRV를 생성합니다.
+	hr = ::CreateShaderResourceView(_device.Get(), img.GetImages(), img.GetImageCount(), md, _shaderResourceView.GetAddressOf());
+	CHECK(hr);
+
+	hr = ::CreateShaderResourceView(_device.Get(), img2.GetImages(), img2.GetImageCount(), md2, _shaderResourceView2.GetAddressOf());
 	CHECK(hr);
 }
 

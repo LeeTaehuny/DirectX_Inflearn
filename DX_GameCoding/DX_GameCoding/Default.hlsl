@@ -2,9 +2,9 @@
 struct VS_INPUT
 {
 	// 생성할 Input Layout을 보면
-	// position은 POSITION으로, color는 COLOR로 읽기로 지정
+	// position은 POSITION으로, uv는 TEXCOORD로 읽기로 지정
 	float4 position : POSITION;
-	float4 color : COLOR;
+	float2 uv : TEXCOORD;
 };
 
 // VertexShader에서 출력되는 구조체를 생성합니다.
@@ -12,7 +12,7 @@ struct VS_OUTPUT
 {
 	// SV : System Value - 무조건 있어야 하는 값
 	float4 position : SV_POSITION;
-	float4 color : COLOR;
+	float2 uv : TEXCOORD;
 };
 
 // VertexShader의 메인 함수를 정의합니다.
@@ -27,7 +27,7 @@ VS_OUTPUT VS(VS_INPUT input)
 
 	// * 출력할 구조체의 정보를 채워줍니다.
 	output.position = input.position;
-	output.color = input.color;
+	output.uv = input.uv;
 
 	// * 만들어진 구조체를 반환합니다.
 	return output;
@@ -49,11 +49,20 @@ VS_OUTPUT VS(VS_INPUT input)
 // VS(정점) -> RS(처리) -> PS(픽셀)
 
 
+// t0 레지스터에 texture0을 등록합니다.
+Texture2D texture0 : register(t0);
+Texture2D texture1 : register(t1);
+// s0 레지스터에 sampler0을 등록합니다.
+SamplerState sampler0 : register(s0);
+
 // PixelShader의 메인 함수를 정의합니다.
 // * (VS_OUTPUT input) : VS 단계에서 리턴해준 output을 입력 파라미터로 전달 받습니다.
 // * SV_Target		   : PS의 결과물이 SV_Target(렌더 타겟)에 전달합니다.
 float4 PS(VS_OUTPUT input) : SV_Target
 {
+	// texture0번의 uv좌표에 해당하는 색상 정보를 저장합니다.
+	float4 color = texture0.Sample(sampler0, input.uv);
 
-	return input.color;
+	// uv좌표에 해당하는 색상 정보를 반환합니다.
+	return color;
 }
