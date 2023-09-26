@@ -48,6 +48,9 @@ private:
 	// * SRV : 셰이더에 리소스로 사용할 수 있는 뷰
 	void	CreateSRV();
 
+	// 상수 버퍼를 생성하기 위한 함수를 선언합니다.
+	void	CreateConstantBuffer();
+
 	// 셰이더는 파일을 로드하는 방식으로 만들어줘야 합니다.
 	// * 공용으로 셰이더를 파일로부터 로드하기 위한 함수를 선언합니다.
 	// * path : 경로
@@ -115,5 +118,11 @@ private:
 	// * 셰이더 리소스 뷰를 저장하기 위한 변수를 선언합니다.
 	ComPtr<ID3D11ShaderResourceView> _shaderResourceView = nullptr;
 	ComPtr<ID3D11ShaderResourceView> _shaderResourceView2 = nullptr;
+
+private:
+	// 위치, 회전, 크기를 가지는 구조체 타입의 변수를 선언합니다.
+	TransformData _transformData;
+	// * 상수 정보들을 저장하기 위한 버퍼를 선언합니다.
+	ComPtr<ID3D11Buffer> _constantBuffer;
 };
 

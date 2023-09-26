@@ -26,10 +26,27 @@ void Game::Init(HWND hwnd)
 	CreatePS();
 
 	CreateSRV();
+	CreateConstantBuffer();
 }
 
 void Game::Update()
 {
+	// 테스트로 트랜스폼 정보에 0.3f를 넣어주겠습니다.
+	_transformData.offset.x += 0.003f;
+	_transformData.offset.y += 0.003f;
+
+	D3D11_MAPPED_SUBRESOURCE subResource;
+	ZeroMemory(&subResource, sizeof(subResource));
+
+	// _transformData를 매 프레임마다 _constantBuffer에 복사를 해주겠습니다.
+	// * Map으로 데이터를 넣어줄 준비를 합니다.
+	_deviceContext->Map(_constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
+
+	// * 해당 위치에서 _transformData를 GPU에 복사해줍니다.
+	::memcpy(subResource.pData, &_transformData, sizeof(_transformData));
+
+	// * 사용이 끝났으므로 Unmap으로 Map을 해제합니다.
+	_deviceContext->Unmap(_constantBuffer.Get(), 0);
 }
 
 void Game::Render()
@@ -61,6 +78,8 @@ void Game::Render()
 		{
 			// 디바이스 컨텍스트를 이용해 VS에 만든 셰이더를 연결시켜줍니다.
 			_deviceContext->VSSetShader(_vertexShader.Get(), nullptr, 0);
+			// 디바이스 컨텍스트를 이용해 VS에 만든 상수 버퍼를 연결시켜줍니다.
+			_deviceContext->VSSetConstantBuffers(0, 1, _constantBuffer.GetAddressOf());
 		}
 
 		// RS
@@ -335,6 +354,25 @@ void Game::CreateSRV()
 	CHECK(hr);
 
 	hr = ::CreateShaderResourceView(_device.Get(), img2.GetImages(), img2.GetImageCount(), md2, _shaderResourceView2.GetAddressOf());
+	CHECK(hr);
+}
+
+void Game::CreateConstantBuffer()
+{
+	// 버퍼 생성에 사용될 DESC를 생성합니다.
+	D3D11_BUFFER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+
+	// D3D11_USAGE_DYNAMIC : CPU_Write + GPU_Read
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	// D3D11_BIND_CONSTANT_BUFFER : 상수 버퍼 용도로 사용하겠다는 설정
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.ByteWidth = sizeof(TransformData);
+	// D3D11_CPU_ACCESS_WRITE : CPU의 쓰기를 허용한다는 플래그
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	// 버퍼를 생성해줍니다. (_constantBuffer에 결과물을 저장합니다.)
+	HRESULT hr = _device->CreateBuffer(&desc, nullptr, _constantBuffer.GetAddressOf());
 	CHECK(hr);
 }
 

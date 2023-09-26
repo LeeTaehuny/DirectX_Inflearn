@@ -15,6 +15,13 @@ struct VS_OUTPUT
 	float2 uv : TEXCOORD;
 };
 
+// VS_INPUT에서 들어오는 것은 도형에 대한 기하학적인 모습이라고 생각할 수 있습니다.
+// * 추가적인 정보를 받아 줄 상수 버퍼를 등록합니다. (b : 버퍼의 약자)
+cbuffer TransfromData : register(b0)
+{
+	float4 offset;
+}
+
 // VertexShader의 메인 함수를 정의합니다.
 // * VS_OUTPUT : 리턴 타입
 // * VS		   : 함수 명
@@ -26,7 +33,8 @@ VS_OUTPUT VS(VS_INPUT input)
 	VS_OUTPUT output;
 
 	// * 출력할 구조체의 정보를 채워줍니다.
-	output.position = input.position;
+	// ** 위에서 들어온 추가적인 정보도 연산에 추가해줍니다.
+	output.position = input.position + offset;
 	output.uv = input.uv;
 
 	// * 만들어진 구조체를 반환합니다.
