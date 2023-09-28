@@ -44,6 +44,13 @@ private:
 	// PS를 생성하기 위한 함수를 선언합니다.
 	void	CreatePS();
 
+	// RS 단계를 구성하는 데 쓰이는 설정들을 묶은 상태 집합을 생성하기 위한 함수를 선언합니다.
+	void	CreateRasterizerState();
+	// SamplerState를 생성하기 위한 함수를 선언합니다.
+	void	CreateSamplerState();
+	// BlendState를 생성하기 위한 함수를 선언합니다.
+	void	CreateBlendState();
+
 	// SRV(셰이더-리소스-뷰)를 생성하기 위한 함수를 선언합니다.
 	// * SRV : 셰이더에 리소스로 사용할 수 있는 뷰
 	void	CreateSRV();
@@ -108,6 +115,10 @@ private:
 	// * 임의 길이 데이터를 반환하는 데 사용할 변수를 선언합니다.
 	ComPtr<ID3DBlob> _vsBlob;
 
+	// RS
+	// * 파이프라인의 RS 단계를 구성하는 데 쓰이는 설정들을 묶은 상태 집합을 저장하기 위한 변수를 선언합니다.
+	ComPtr<ID3D11RasterizerState> _rasterizerState = nullptr;
+
 	// PS
 	// * PS를 로드해 저장하기 위한 변수를 선언합니다.
 	ComPtr<ID3D11PixelShader> _pixelShader = nullptr;
@@ -118,6 +129,14 @@ private:
 	// * 셰이더 리소스 뷰를 저장하기 위한 변수를 선언합니다.
 	ComPtr<ID3D11ShaderResourceView> _shaderResourceView = nullptr;
 	ComPtr<ID3D11ShaderResourceView> _shaderResourceView2 = nullptr;
+
+	// Sampler
+	// * Sampler를 생성하는데 쓰이는 설정들을 묶은 상태 집합을 저장하기 위한 변수를 선언합니다.
+	ComPtr<ID3D11SamplerState> _samplerState = nullptr;
+
+	// Blend
+	// * PS를 거쳐 생성된 단편이 렌더 타겟에 어떻게 적용될지를 결정하는 상태값들을 저장할 변수를 선언합니다.
+	ComPtr<ID3D11BlendState> _blendState = nullptr;
 
 private:
 	// 위치, 회전, 크기를 가지는 구조체 타입의 변수를 선언합니다.
