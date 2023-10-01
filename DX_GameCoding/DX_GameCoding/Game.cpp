@@ -35,9 +35,30 @@ void Game::Init(HWND hwnd)
 
 void Game::Update()
 {
-	// 테스트로 트랜스폼 정보에 0.3f를 넣어주겠습니다.
-	//_transformData.offset.x += 0.003f;
-	//_transformData.offset.y += 0.003f;
+	// 테스트를 위해 로컬 위치를 이동시켜봅니다.
+	_localPosition.x += 0.001f;
+	_localRotation.z += 0.003f;
+	_localScale *= 0.99f;
+
+	// SRT
+	{
+		// SRT 순서에 맞춰 행렬을 생성합니다.
+		// * Scale
+		Matrix matScale = Matrix::CreateScale(_localScale);
+
+		// * Rotation 
+		Matrix matRotation = Matrix::CreateRotationX(_localRotation.x);
+		matRotation *= Matrix::CreateRotationY(_localRotation.y);
+		matRotation *= Matrix::CreateRotationZ(_localRotation.z);
+
+		// * Translation
+		Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
+
+		// 만들어진 SRT 정보를 조합해 월드 행렬을 만들어줍니다. 
+		Matrix matWorld = matScale * matRotation * matTranslation;
+		// World 행렬에 넣어줍니다.
+		_transformData.matWorld = matWorld;
+	}
 
 	D3D11_MAPPED_SUBRESOURCE subResource;
 	ZeroMemory(&subResource, sizeof(subResource));

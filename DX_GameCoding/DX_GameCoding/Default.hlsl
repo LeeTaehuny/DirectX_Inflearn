@@ -19,7 +19,9 @@ struct VS_OUTPUT
 // * 추가적인 정보를 받아 줄 상수 버퍼를 등록합니다. (b : 버퍼의 약자)
 cbuffer TransfromData : register(b0)
 {
-	float4 offset;
+	row_major matrix matWorld;
+	row_major matrix matView;
+	row_major matrix matProjection;
 }
 
 // VertexShader의 메인 함수를 정의합니다.
@@ -32,9 +34,13 @@ VS_OUTPUT VS(VS_INPUT input)
 	// * 출력 타입의 구조체를 생성합니다.
 	VS_OUTPUT output;
 
-	// * 출력할 구조체의 정보를 채워줍니다.
-	// ** 위에서 들어온 추가적인 정보도 연산에 추가해줍니다.
-	output.position = input.position + offset;
+	// WVP (월드 * 뷰 * 프로젝션)
+	float4 position = mul(input.position, matWorld);
+	position = mul(position, matView);
+	position = mul(position, matProjection);
+
+	// 최종 결과물을 토대로 출력 위치를 설정합니다.
+	output.position = position;
 	output.uv = input.uv;
 
 	// * 만들어진 구조체를 반환합니다.
