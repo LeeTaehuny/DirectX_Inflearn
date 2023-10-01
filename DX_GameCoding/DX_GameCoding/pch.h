@@ -2,6 +2,8 @@
 
 // 자주 사용할 헤더들을 미리 컴파일하기 위한 헤더입니다.
 
+
+
 #include "Types.h"
 #include "Struct.h"
 #include "Values.h"
@@ -11,6 +13,7 @@
 #include <list>
 #include <map>
 #include <unordered_map>
+#include <memory>
 using namespace std;
 
 // WIN
@@ -45,3 +48,6 @@ using namespace Microsoft::WRL;		// ComPtr 를 사용하기 위함
 
 // assertion 체크
 #define CHECK(p) assert(SUCCEEDED(p));
+
+// engine
+//#include"Graphics.h"
