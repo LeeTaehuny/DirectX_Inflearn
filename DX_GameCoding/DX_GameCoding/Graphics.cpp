@@ -117,8 +117,8 @@ void Graphics::SetViewport()
 	// 뷰포트에 대한 정보를 채워줍니다.
 	_viewport.TopLeftX = 0.0f;
 	_viewport.TopLeftY = 0.0f;
-	_viewport.Width = static_cast<float>(_width);
-	_viewport.Height = static_cast<float>(_height);
+	_viewport.Width = static_cast<float>(GWinSizeX);
+	_viewport.Height = static_cast<float>(GWinSizeY);
 	_viewport.MinDepth = 0.0f;
 	_viewport.MaxDepth = 1.0f;
 }

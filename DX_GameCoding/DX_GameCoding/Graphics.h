@@ -29,10 +29,6 @@ private:
 private:
 	// 윈도우 핸들 번호를 저장하기 위한 변수를 선언합니다.
 	HWND	_hwnd;
-
-	// 윈도우 창 크기를 저장하기 위한 변수를 선언합니다.
-	uint32	_width = GWinSizeX;
-	uint32	_height = GWinSizeY;
 	
 private:
 	// Device & SwapChain

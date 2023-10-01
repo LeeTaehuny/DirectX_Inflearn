@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include <vector>
 
-class Graphics;
+//class Graphics;
+//class VertexBuffer;
 
 class Game
 {
@@ -17,10 +18,6 @@ public:
 	// 렌더 함수를 선언합니다.
 	void	Render();
 
-private:
-
-
-// 삼각형 띄우기
 private:
 	// 기하학적인 도형을 만들기 위한 함수를 선언합니다.
 	void	CreateGeometry();
@@ -58,7 +55,7 @@ private:
 
 private:
 	// 윈도우 핸들 번호를 저장하기 위한 변수를 선언합니다.
-	HWND	_hwnd;
+	HWND	_hwnd = 0;
 
 	// 윈도우 창 크기를 저장하기 위한 변수를 선언합니다.
 	// uint32	_width = 0;
@@ -72,16 +69,13 @@ private:
 	// Geometry
 	// * 정점들을 저장하기 위한 벡터 컨테이너를 선언합니다.
 	vector<Vertex> _vertices;
-	// * 정점 정보들을 저장하기 위한 버퍼를 선언합니다.
-	ComPtr<ID3D11Buffer> _vertexBuffer = nullptr;
+	shared_ptr<VertexBuffer> _vertexBuffer;
 
 	// * 인덱스들을 저장하기 위한 벡터 컨테이너를 선언합니다.
 	vector<uint32> _indices;
-	// * 인덱스 정보들을 저장하기 위한 버퍼를 선언합니다.
-	ComPtr<ID3D11Buffer> _indexBuffer = nullptr;
+	shared_ptr<IndexBuffer> _indexBuffer;
 
-	// * 입력 레이아웃을 저장하기 위한 변수를 선언합니다.
-	ComPtr<ID3D11InputLayout> _inputLayout = nullptr;
+	shared_ptr<InputLayout> _inputLayout;
 
 	// VS
 	// * VS를 로드해 저장하기 위한 변수를 선언합니다.

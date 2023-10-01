@@ -50,4 +50,7 @@ using namespace Microsoft::WRL;		// ComPtr 를 사용하기 위함
 #define CHECK(p) assert(SUCCEEDED(p));
 
 // engine
-//#include"Graphics.h"
+#include "Graphics.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "InputLayout.h"

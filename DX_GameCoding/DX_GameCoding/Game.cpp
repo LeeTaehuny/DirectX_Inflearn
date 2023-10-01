@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "Game.h"
-#include "Graphics.h"
+//#include "Graphics.h"
+//#include "VertexBuffer.h"
 
 Game::Game()
 {
@@ -17,6 +18,12 @@ void Game::Init(HWND hwnd)
 
 	// Graphics 객체를 생성합니다.
 	_graphics = make_shared<Graphics>(hwnd);
+	// VertexBuffer 객체를 생성합니다.
+	_vertexBuffer = make_shared<VertexBuffer>(_graphics->GetDevice());
+	// IndexBuffer 객체를 생성합니다.
+	_indexBuffer = make_shared<IndexBuffer>(_graphics->GetDevice());
+	// InputLayout 객체를 생성합니다.
+	_inputLayout = make_shared<InputLayout>(_graphics->GetDevice());
 
 
 	CreateGeometry();
@@ -91,11 +98,11 @@ void Game::Render()
 			uint32 offset = 0;
 
 			// 디바이스 컨텍스트를 이용해 IA에 정점 버퍼를 연결시켜줍니다.
-			_deviceContext->IASetVertexBuffers(0, 1, _vertexBuffer.GetAddressOf(), &stride, &offset);
+			_deviceContext->IASetVertexBuffers(0, 1, _vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
 			// 디바이스 컨텍스트를 이용해 IA에 인덱스 버퍼를 연결시켜줍니다.
-			_deviceContext->IASetIndexBuffer(_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			_deviceContext->IASetIndexBuffer(_indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
 			// 디바이스 컨텍스트를 이용해 IA에 InputLayout 정보를 연결시켜줍니다.
-			_deviceContext->IASetInputLayout(_inputLayout.Get());
+			_deviceContext->IASetInputLayout(_inputLayout->GetComPtr().Get());
 			// 삼각형(대부분 모든 사물은 삼각형으로 표현)을 그리는 과정에서 전달한 정점들을 어떤 순서로 이어 붙일 것인지에 대한 정보를 지정합니다. (topology)
 			_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
@@ -174,25 +181,7 @@ void Game::CreateGeometry()
 
 	// VertexBuffer
 	{
-		// 버퍼 생성에 사용될 DESC를 생성합니다.
-		D3D11_BUFFER_DESC desc;
-		// 0으로 초기화해줍니다.
-		ZeroMemory(&desc, sizeof(desc));
-		// * D3D11_USAGE_IMMUTABLE : GPU만 읽을 수 있는 방식으로 사용하겠다고 설정
-		desc.Usage = D3D11_USAGE_IMMUTABLE;
-		// * D3D11_BIND_VERTEX_BUFFER : VertexBuffer를 바인딩하는 용도로 사용하겠다고 설정
-		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		// * desc의 바이트 크기를 설정합니다. (데이터 유형의 크기 * 수)
-		desc.ByteWidth = (uint32)sizeof(Vertex) * _vertices.size();
-
-		D3D11_SUBRESOURCE_DATA data;
-		ZeroMemory(&data, sizeof(data));
-		// 첫 번째 데이터의 시작 주소를 저장합니다.
-		data.pSysMem = _vertices.data();
-
-		// 버퍼를 생성해줍니다. (_vertexBuffer에 결과물을 저장합니다.)
-		HRESULT hr = _graphics->GetDevice()->CreateBuffer(&desc, &data, _vertexBuffer.GetAddressOf());
-		CHECK(hr);
+		_vertexBuffer->Create(_vertices);
 	}
 
 	// index
@@ -204,23 +193,7 @@ void Game::CreateGeometry()
 
 	// indexBuffer
 	{
-		// 버퍼 생성에 사용될 DESC를 생성합니다.
-		D3D11_BUFFER_DESC desc;
-		ZeroMemory(&desc, sizeof(desc));
-
-		desc.Usage = D3D11_USAGE_IMMUTABLE;
-		// * D3D11_BIND_INDEX_BUFFER : IndexBuffer를 바인딩하는 용도로 사용하겠다고 설정
-		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		desc.ByteWidth = (uint32)sizeof(uint32) * _indices.size();
-
-		D3D11_SUBRESOURCE_DATA data;
-		ZeroMemory(&data, sizeof(data));
-		// 첫 번째 데이터의 시작 주소를 저장합니다.
-		data.pSysMem = _indices.data();
-
-		// 버퍼를 생성해줍니다. (_indexBuffer에 결과물을 저장합니다.)
-		HRESULT hr = _graphics->GetDevice()->CreateBuffer(&desc, &data, _indexBuffer.GetAddressOf());
-		CHECK(hr);
+		_indexBuffer->Create(_indices);
 	}
 }
 
@@ -228,17 +201,13 @@ void Game::CreateInputLayout()
 {
 	// 입력 요소에 대한 정보를 생성합니다.
 	// * Vertex 구조체의 내부 요소들에 대해 묘사합니다.
-	D3D11_INPUT_ELEMENT_DESC layout[] =
+	vector<D3D11_INPUT_ELEMENT_DESC> layout =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	// layout의 개수를 저장합니다.
-	const int32 count = sizeof(layout) / sizeof(D3D11_INPUT_ELEMENT_DESC);
-
-	// 입력 버퍼 데이터를 설명하는 입력 레이아웃 개체를 만듭니다.
-	_graphics->GetDevice()->CreateInputLayout(layout, count, _vsBlob->GetBufferPointer(), _vsBlob->GetBufferSize(), _inputLayout.GetAddressOf());
+	_inputLayout->Create(layout, _vsBlob);
 }
 
 void Game::CreateVS()
