@@ -67,12 +67,11 @@ private:
 
 private:
 	// Geometry
-	// * 정점들을 저장하기 위한 벡터 컨테이너를 선언합니다.
-	vector<Vertex> _vertices;
+	shared_ptr<Geometry<VertexTextureData>> _geometry;
+
 	shared_ptr<VertexBuffer> _vertexBuffer;
 
 	// * 인덱스들을 저장하기 위한 벡터 컨테이너를 선언합니다.
-	vector<uint32> _indices;
 	shared_ptr<IndexBuffer> _indexBuffer;
 
 	shared_ptr<InputLayout> _inputLayout;

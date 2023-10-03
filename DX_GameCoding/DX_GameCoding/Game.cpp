@@ -24,6 +24,8 @@ void Game::Init(HWND hwnd)
 	_indexBuffer = make_shared<IndexBuffer>(_graphics->GetDevice());
 	// InputLayout 객체를 생성합니다.
 	_inputLayout = make_shared<InputLayout>(_graphics->GetDevice());
+	// VertexTextureData 타입의 Geometry 객체를 생성합니다.
+	_geometry = make_shared<Geometry<VertexTextureData>>();
 
 
 	CreateGeometry();
@@ -93,7 +95,7 @@ void Game::Render()
 		// IA
 		{
 			// * stride : Vertex 구조체의 크기
-			uint32 stride = sizeof(Vertex);
+			uint32 stride = sizeof(VertexTextureData);
 			// * offset : 보간 수치
 			uint32 offset = 0;
 
@@ -143,7 +145,7 @@ void Game::Render()
 		}
 
 		// 디바이스 컨텍스트를 이용해 해당 물체를 그려달라고 요청합니다.
-		_deviceContext->DrawIndexed(_indices.size(), 0, 0);
+		_deviceContext->DrawIndexed(_geometry->GetIndexCount(), 0, 0);
 	}
 
 	// 최종 렌더 정보를 제출
@@ -153,61 +155,19 @@ void Game::Render()
 
 void Game::CreateGeometry()
 {
-	// 1 3
-	// 0 2
-
 	// Vertex Data
-	{
-		// 사이즈 조정
-		_vertices.resize(4);
-
-		// 위치 정보와 uv 좌표를 설정합니다.
-		_vertices[0].position = Vec3(-0.5f, -0.5f, 0.0f);
-		_vertices[0].uv = Vec2(0.0f, 1.0f);
-		//_vertices[0].color = Color(1.0f, 0.0f, 0.0f, 1.0f);		
-
-		_vertices[1].position = Vec3(-0.5f, 0.5f, 0.0f);
-		_vertices[1].uv = Vec2(0.0f, 0.0f);
-		//_vertices[1].color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-
-		_vertices[2].position = Vec3(0.5f, -0.5f, 0.0f);
-		_vertices[2].uv = Vec2(1.0f, 1.0f);
-		//_vertices[2].color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-
-		_vertices[3].position = Vec3(0.5f, 0.5f, 0.0f);
-		_vertices[3].uv = Vec2(1.0f, 0.0f);
-		//_vertices[3].color = Color(1.0f, 0.0f, 0.0f, 1.0f);
-	}
+	GeometryHelper::CreateRectangle(_geometry);
 
 	// VertexBuffer
-	{
-		_vertexBuffer->Create(_vertices);
-	}
-
-	// index
-	{
-		// 인덱스 컨테이너에 정보를 저장합니다.
-		// * 저장하는 방향은 일정해야 합니다.
-		_indices = { 0, 1, 2, 2, 1, 3 };
-	}
+	_vertexBuffer->Create(_geometry->GetVertices());
 
 	// indexBuffer
-	{
-		_indexBuffer->Create(_indices);
-	}
+	_indexBuffer->Create(_geometry->GetIndices());
 }
 
 void Game::CreateInputLayout()
 {
-	// 입력 요소에 대한 정보를 생성합니다.
-	// * Vertex 구조체의 내부 요소들에 대해 묘사합니다.
-	vector<D3D11_INPUT_ELEMENT_DESC> layout =
-	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	_inputLayout->Create(layout, _vsBlob);
+	_inputLayout->Create(VertexTextureData::descs, _vsBlob);
 }
 
 void Game::CreateVS()
