@@ -65,7 +65,6 @@ VS_OUTPUT VS(VS_INPUT input)
 
 // t0 레지스터에 texture0을 등록합니다.
 Texture2D texture0 : register(t0);
-Texture2D texture1 : register(t1);
 // s0 레지스터에 sampler0을 등록합니다.
 SamplerState sampler0 : register(s0);
 

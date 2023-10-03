@@ -19,39 +19,12 @@ public:
 	void	Render();
 
 private:
-	// 기하학적인 도형을 만들기 위한 함수를 선언합니다.
-	void	CreateGeometry();
-
-	// 생성한 기하학적인 도형이 어떻게 되어있는지 묘사해야 합니다.
-	// * input layout을 생성하기 위한 함수를 선언합니다.
-	void	CreateInputLayout();
-
-	// VS를 생성하기 위한 함수를 선언합니다.
-	void	CreateVS();
-	// PS를 생성하기 위한 함수를 선언합니다.
-	void	CreatePS();
-
 	// RS 단계를 구성하는 데 쓰이는 설정들을 묶은 상태 집합을 생성하기 위한 함수를 선언합니다.
 	void	CreateRasterizerState();
 	// SamplerState를 생성하기 위한 함수를 선언합니다.
 	void	CreateSamplerState();
 	// BlendState를 생성하기 위한 함수를 선언합니다.
 	void	CreateBlendState();
-
-	// SRV(셰이더-리소스-뷰)를 생성하기 위한 함수를 선언합니다.
-	// * SRV : 셰이더에 리소스로 사용할 수 있는 뷰
-	void	CreateSRV();
-
-	// 상수 버퍼를 생성하기 위한 함수를 선언합니다.
-	void	CreateConstantBuffer();
-
-	// 셰이더는 파일을 로드하는 방식으로 만들어줘야 합니다.
-	// * 공용으로 셰이더를 파일로부터 로드하기 위한 함수를 선언합니다.
-	// * path : 경로
-	// * name : 이름
-	// * version : 셰이더 버전
-	// * blob : 로드한 셰이더 결과물을 저장할 변수
-	void	LoadShaderFromFile(const wstring& path, const string& name, const string& version, ComPtr<ID3DBlob>& blob);
 
 private:
 	// 윈도우 핸들 번호를 저장하기 위한 변수를 선언합니다.
@@ -68,34 +41,22 @@ private:
 private:
 	// Geometry
 	shared_ptr<Geometry<VertexTextureData>> _geometry;
-
 	shared_ptr<VertexBuffer> _vertexBuffer;
-
-	// * 인덱스들을 저장하기 위한 벡터 컨테이너를 선언합니다.
 	shared_ptr<IndexBuffer> _indexBuffer;
-
 	shared_ptr<InputLayout> _inputLayout;
 
 	// VS
-	// * VS를 로드해 저장하기 위한 변수를 선언합니다.
-	ComPtr<ID3D11VertexShader> _vertexShader = nullptr;
-	// * 임의 길이 데이터를 반환하는 데 사용할 변수를 선언합니다.
-	ComPtr<ID3DBlob> _vsBlob;
+	shared_ptr<VertexShader> _vertexShader;
 
 	// RS
 	// * 파이프라인의 RS 단계를 구성하는 데 쓰이는 설정들을 묶은 상태 집합을 저장하기 위한 변수를 선언합니다.
 	ComPtr<ID3D11RasterizerState> _rasterizerState = nullptr;
 
 	// PS
-	// * PS를 로드해 저장하기 위한 변수를 선언합니다.
-	ComPtr<ID3D11PixelShader> _pixelShader = nullptr;
-	// * 임의 길이 데이터를 반환하는 데 사용할 변수를 선언합니다.
-	ComPtr<ID3DBlob> _psBlob;
+	shared_ptr<PixelShader> _pixelShader;
 
 	// SRV
-	// * 셰이더 리소스 뷰를 저장하기 위한 변수를 선언합니다.
-	ComPtr<ID3D11ShaderResourceView> _shaderResourceView = nullptr;
-	ComPtr<ID3D11ShaderResourceView> _shaderResourceView2 = nullptr;
+	shared_ptr<Texture> _texture1;
 
 	// Sampler
 	// * Sampler를 생성하는데 쓰이는 설정들을 묶은 상태 집합을 저장하기 위한 변수를 선언합니다.
@@ -108,8 +69,9 @@ private:
 private:
 	// 위치, 회전, 크기를 가지는 구조체 타입의 변수를 선언합니다.
 	TransformData _transformData;
-	// * 상수 정보들을 저장하기 위한 버퍼를 선언합니다.
-	ComPtr<ID3D11Buffer> _constantBuffer;
+	
+	// constantBuffer
+	shared_ptr<ConstantBuffer<TransformData>> _constantBuffer;
 
 	// 로컬 좌표계 기준의 위치와 회전, 스케일을 저장하기 위한 변수를 선언합니다.
 	Vec3 _localPosition = { 0.0f, 0.0f, 0.0f };

@@ -57,3 +57,6 @@ using namespace Microsoft::WRL;		// ComPtr 를 사용하기 위함
 #include "Geometry.h"
 #include "GeometryHelper.h"
 #include "VertexData.h"
+#include "Shader.h"
+#include "ConstantBuffer.h"
+#include "Texture.h"
