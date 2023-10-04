@@ -19,14 +19,6 @@ public:
 	void	Render();
 
 private:
-	// RS 단계를 구성하는 데 쓰이는 설정들을 묶은 상태 집합을 생성하기 위한 함수를 선언합니다.
-	void	CreateRasterizerState();
-	// SamplerState를 생성하기 위한 함수를 선언합니다.
-	void	CreateSamplerState();
-	// BlendState를 생성하기 위한 함수를 선언합니다.
-	void	CreateBlendState();
-
-private:
 	// 윈도우 핸들 번호를 저장하기 위한 변수를 선언합니다.
 	HWND	_hwnd = 0;
 
@@ -36,7 +28,8 @@ private:
 
 	// Graphics 타입의 Shared_ptr를 선언합니다.
 	shared_ptr<Graphics> _graphics;
-
+	// Pipeline 타입의 Shared_ptr를 선언합니다.
+	shared_ptr<Pipeline> _pipeline;
 
 private:
 	// Geometry
@@ -49,8 +42,7 @@ private:
 	shared_ptr<VertexShader> _vertexShader;
 
 	// RS
-	// * 파이프라인의 RS 단계를 구성하는 데 쓰이는 설정들을 묶은 상태 집합을 저장하기 위한 변수를 선언합니다.
-	ComPtr<ID3D11RasterizerState> _rasterizerState = nullptr;
+	shared_ptr<RasterizerState> _rasterizerState;
 
 	// PS
 	shared_ptr<PixelShader> _pixelShader;
@@ -59,12 +51,10 @@ private:
 	shared_ptr<Texture> _texture1;
 
 	// Sampler
-	// * Sampler를 생성하는데 쓰이는 설정들을 묶은 상태 집합을 저장하기 위한 변수를 선언합니다.
-	ComPtr<ID3D11SamplerState> _samplerState = nullptr;
+	shared_ptr<SamplerState> _samplerState;
 
 	// Blend
-	// * PS를 거쳐 생성된 단편이 렌더 타겟에 어떻게 적용될지를 결정하는 상태값들을 저장할 변수를 선언합니다.
-	ComPtr<ID3D11BlendState> _blendState = nullptr;
+	shared_ptr<BlendState> _blendState;
 
 private:
 	// 위치, 회전, 크기를 가지는 구조체 타입의 변수를 선언합니다.
