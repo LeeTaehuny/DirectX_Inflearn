@@ -64,3 +64,4 @@ using namespace Microsoft::WRL;		// ComPtr 를 사용하기 위함
 #include "SamplerState.h"
 #include "BlendState.h"
 #include "Pipeline.h"
+#include "Transform.h"

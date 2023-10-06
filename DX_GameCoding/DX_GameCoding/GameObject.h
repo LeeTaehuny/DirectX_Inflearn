@@ -37,9 +37,10 @@ private:
 	// constantBuffer
 	shared_ptr<ConstantBuffer<TransformData>> _constantBuffer;
 
-	// 로컬 좌표계 기준의 위치와 회전, 스케일을 저장하기 위한 변수를 선언합니다.
-	Vec3 _localPosition = { 0.0f, 0.0f, 0.0f };
-	Vec3 _localRotation = { 0.0f, 0.0f, 0.0f };
-	Vec3 _localScale = { 1.0f, 1.0f, 1.0f };
+	// Transform 컴포넌트를 추가합니다.
+	shared_ptr<Transform> _transform = make_shared<Transform>();
+
+	//test
+	shared_ptr<Transform> _parnet = make_shared<Transform>();
 };
 

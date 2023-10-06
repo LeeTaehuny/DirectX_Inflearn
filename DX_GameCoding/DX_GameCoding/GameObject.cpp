@@ -57,6 +57,10 @@ GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> 
 	_samplerState = make_shared<SamplerState>(device);
 	// SamplerState 생성
 	_samplerState->Create();
+
+	//test
+	_parnet->AddChild(_transform);
+	_transform->SetParent(_parnet);
 }
 
 GameObject::~GameObject()
@@ -65,28 +69,15 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	// 테스트를 위해 로컬 위치를 이동시켜봅니다.
-	_localPosition.x += 0.001f;
+	//test
+	Vec3 pos = _parnet->GetPosition();
+	Vec3 rot = _parnet->GetRotation();
+	rot.z += 0.01f;
+	pos.x += 0.001f;
+	_parnet->SetPosition(pos);
+	_parnet->SetRotation(rot);
 
-	// SRT
-	{
-		// SRT 순서에 맞춰 행렬을 생성합니다.
-		// * Scale
-		Matrix matScale = Matrix::CreateScale(_localScale);
-
-		// * Rotation 
-		Matrix matRotation = Matrix::CreateRotationX(_localRotation.x);
-		matRotation *= Matrix::CreateRotationY(_localRotation.y);
-		matRotation *= Matrix::CreateRotationZ(_localRotation.z);
-
-		// * Translation
-		Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
-
-		// 만들어진 SRT 정보를 조합해 월드 행렬을 만들어줍니다. 
-		Matrix matWorld = matScale * matRotation * matTranslation;
-		// World 행렬에 넣어줍니다.
-		_transformData.matWorld = matWorld;
-	}
+	_transformData.matWorld = _transform->GetWorldMatrix();
 
 	_constantBuffer->CopyData(_transformData);
 }
