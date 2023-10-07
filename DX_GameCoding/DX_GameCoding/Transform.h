@@ -4,11 +4,12 @@
 
 class Transform : public Component
 {
+	using Super = Component;
 public:
 	Transform();
 	virtual ~Transform() override;
 	
-	virtual void Init() override;
+	virtual void Awake() override;
 	virtual void Update() override;
 
 	// Transform 정보를 부모의 Transform 정보로 갱신하기 위한 함수를 선언합니다.
@@ -35,6 +36,11 @@ public:
 	// * World Position Getter & Setter
 	Vec3 GetPosition() { return _position; }
 	void SetPosition(const Vec3& worldPosition);
+
+	// * Right, Up, Look Vector Getter
+	Vec3 GetRight() { return _matWorld.Right(); }
+	Vec3 GetUp() { return _matWorld.Up(); }
+	Vec3 GetLook() { return _matWorld.Backward(); }
 
 	// 월드 변환 행렬을 반환하기 위한 함수를 정의합니다.
 	Matrix GetWorldMatrix() { return _matWorld; }
@@ -69,11 +75,6 @@ private:
 	Vec3 _scale;
 	Vec3 _rotation;
 	Vec3 _position;
-
-	// World 기준의 right, up, forward 벡터를 저장하기 위한 변수를 선언합니다.
-	Vec3 _right;
-	Vec3 _up;
-	Vec3 _look;
 
 private:
 	// 부모의 Transform 정보를 저장하기 위한 변수를 선언합니다.

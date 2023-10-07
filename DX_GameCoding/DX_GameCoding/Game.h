@@ -30,8 +30,10 @@ private:
 	// Pipeline 타입의 Shared_ptr를 선언합니다.
 	shared_ptr<Pipeline> _pipeline;
 
+	// temp
 	// GameObject 타입의 shared_ptr를 선언합니다.
-	shared_ptr<GameObject> _gameObject;
-
+	shared_ptr<GameObject> _monster;
+	// Camera 오브젝트 생성
+	shared_ptr<GameObject> _camera;
 };
 

@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Transform.h"
 
-Transform::Transform()
+Transform::Transform() : Super(ComponentType::Transform)
 {
 
 }
@@ -11,7 +11,7 @@ Transform::~Transform()
 
 }
 
-void Transform::Init()
+void Transform::Awake()
 {
 
 }
@@ -76,9 +76,9 @@ void Transform::UpdateTransform()
 	// * 월드 변환 행렬을 사용해 월드 기준의 right, up, look 벡터를 구할 수 있습니다.
 	// * TransformNormal() - (x, y, z, 0)으로 연산한 방향을 반환해주는 함수
 	// * Transform()       - (x, y, z, 1)으로 연산한 방향에 위치까지 반환해주는 함수
-	_right = Vec3::TransformNormal(Vec3::Right, _matWorld);
-	_up = Vec3::TransformNormal(Vec3::Up, _matWorld);
-	_look = Vec3::TransformNormal(Vec3::Backward, _matWorld); // 오른손좌표계 라이브러리이므로 앞 뒤 방향 반대
+	//_right = Vec3::TransformNormal(Vec3::Right, _matWorld); // (1, 0, 0) * matWorld
+	//_up = Vec3::TransformNormal(Vec3::Up, _matWorld);		// (0, 1, 0) * matWorld
+	//_look = Vec3::TransformNormal(Vec3::Backward, _matWorld); // 오른손좌표계 라이브러리이므로 앞 뒤 방향 반대
 
 	// * 월드 변환 행렬을 반대로 분리해 월드의 SRT를 얻을 수 있습니다.
 	//   -> vector3로 관리하게 된다면 짐벌럭 현상이 발생할 수 있기 때문에 게임에서는 사원수 방식으로 회전을 관리합니다.

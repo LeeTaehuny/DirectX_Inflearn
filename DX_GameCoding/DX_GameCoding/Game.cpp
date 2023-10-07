@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Game.h"
-//#include "Graphics.h"
-//#include "VertexBuffer.h"
+
+#include "Camera.h"
 
 Game::Game()
 {
@@ -21,12 +21,24 @@ void Game::Init(HWND hwnd)
 	// Pipeline 객체를 생성합니다.
 	_pipeline = make_shared<Pipeline>(_graphics->GetDeviceContext());
 	// GameObject 객체를 생성합니다.
-	_gameObject = make_shared<GameObject>(_graphics->GetDevice(), _graphics->GetDeviceContext());
+	_monster = make_shared<GameObject>(_graphics->GetDevice(), _graphics->GetDeviceContext());
+	{
+		// Transform 컴포넌트를 추가합니다.
+		_monster->GetOrAddTransform();
+	}
+	// GameObject 객체를 생성합니다.
+	_camera = make_shared<GameObject>(_graphics->GetDevice(), _graphics->GetDeviceContext());
+	{
+		_camera->GetOrAddTransform();
+
+		_camera->AddComponent(make_shared<Camera>());
+	}
 }
 
 void Game::Update()
 {
-	_gameObject->Update();
+	_monster->Update();
+	_camera->Update();
 }
 
 void Game::Render()
@@ -34,7 +46,7 @@ void Game::Render()
 	// 렌더를 위한 준비 작업
 	_graphics->RenderBegin();
 
-	_gameObject->Render(_pipeline);
+	_monster->Render(_pipeline);
 
 	// 최종 렌더 정보를 제출
 	_graphics->RenderEnd();
