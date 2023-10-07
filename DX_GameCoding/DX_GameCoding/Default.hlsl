@@ -17,11 +17,15 @@ struct VS_OUTPUT
 
 // VS_INPUT에서 들어오는 것은 도형에 대한 기하학적인 모습이라고 생각할 수 있습니다.
 // * 추가적인 정보를 받아 줄 상수 버퍼를 등록합니다. (b : 버퍼의 약자)
-cbuffer TransfromData : register(b0)
+cbuffer CameramData : register(b0)
 {
-	row_major matrix matWorld;
 	row_major matrix matView;
 	row_major matrix matProjection;
+}
+
+cbuffer TransfromData : register(b1)
+{
+	row_major matrix matWorld;
 }
 
 // VertexShader의 메인 함수를 정의합니다.

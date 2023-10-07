@@ -7,10 +7,10 @@ class Transform;
 enum class ComponentType : uint8
 {
 	// 고정적인 컴포넌트 타입 (오브젝트마다 최대 1개)
-	Transform,	// 위치 관리
-	MeshRender, // 렌더링
-	Camera,		// 카메라
-	Animator,	// 애니메이션
+	Transform,		// 위치 관리
+	MeshRenderer,	// 렌더링
+	Camera,			// 카메라
+	Animator,		// 애니메이션
 
 	// 유동적인 컴포넌트 타입 (오브젝트마다 여러개가 들어갈 수 있는 타입)
 	Script,		// 대본

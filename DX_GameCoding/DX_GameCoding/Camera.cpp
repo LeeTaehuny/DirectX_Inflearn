@@ -65,6 +65,6 @@ void Camera::UpdateMatrix()
 		// * ViewWidth / ViewHeight : 화면의 크기
 		// * NearZ		 : 사각형의 가까운 면
 		// * FarZ        : 사각형의 먼 면
-		S_MatProjection = ::XMMatrixOrthographicLH(800.0f, 600.0f, 0.f, 1.0f);
+		S_MatProjection = ::XMMatrixOrthographicLH(8.0f, 6.0f, 0.f, 1.0f);
 	}
 }

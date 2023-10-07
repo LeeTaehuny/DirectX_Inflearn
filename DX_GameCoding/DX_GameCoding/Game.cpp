@@ -2,6 +2,7 @@
 #include "Game.h"
 
 #include "Camera.h"
+#include "MeshRenderer.h"
 
 Game::Game()
 {
@@ -25,6 +26,8 @@ void Game::Init(HWND hwnd)
 	{
 		// Transform 컴포넌트를 추가합니다.
 		_monster->GetOrAddTransform();
+		//_monster->GetTransform()->SetScale(Vec3(100.0f, 100.0f, 1.0f));
+		_monster->AddComponent(make_shared<MeshRenderer>(_graphics->GetDevice(), _graphics->GetDeviceContext()));
 	}
 	// GameObject 객체를 생성합니다.
 	_camera = make_shared<GameObject>(_graphics->GetDevice(), _graphics->GetDeviceContext());
@@ -46,7 +49,9 @@ void Game::Render()
 	// 렌더를 위한 준비 작업
 	_graphics->RenderBegin();
 
-	_monster->Render(_pipeline);
+	//_monster->Render(_pipeline);
+	// TEMP
+	_monster->GetMeshRenderer()->Render(_pipeline);
 
 	// 최종 렌더 정보를 제출
 	_graphics->RenderEnd();
