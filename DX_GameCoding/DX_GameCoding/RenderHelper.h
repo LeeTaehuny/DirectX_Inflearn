@@ -1,0 +1,16 @@
+﻿#pragma once
+
+struct TransformData
+{
+	// 월드 행렬
+	Matrix matWorld = Matrix::Identity;
+
+};
+
+struct CameraData
+{
+	// 뷰 행렬
+	Matrix matView = Matrix::Identity;
+	// 프로젝션 행렬
+	Matrix matProjection = Matrix::Identity;
+};

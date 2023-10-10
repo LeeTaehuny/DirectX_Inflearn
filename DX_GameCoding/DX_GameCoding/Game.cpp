@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "TimeManager.h"
 #include "ResourceManager.h"
+#include "RenderManager.h"
 #include "Graphics.h"
 #include "Pipeline.h"
 
@@ -27,8 +28,6 @@ void Game::Init(HWND hwnd)
 
 	// Graphics 객체를 생성합니다.
 	_graphics = make_shared<Graphics>(hwnd);
-	// Pipeline 객체를 생성합니다.
-	_pipeline = make_shared<Pipeline>(_graphics->GetDeviceContext());
 
 	_input = make_shared<InputManager>();
 	_input->Init(hwnd);
@@ -42,24 +41,20 @@ void Game::Init(HWND hwnd)
 	_resource = make_shared<ResourceManager>(_graphics->GetDevice());
 	_resource->Init();
 
+	_render = make_shared<RenderManager>(_graphics->GetDevice(), _graphics->GetDeviceContext());
+	_render->Init();
+
 	SCENE->LoadScene(L"Test");
 }
 
 void Game::Update()
 {
-	// 렌더를 위한 준비 작업
-	_graphics->RenderBegin();
-
 	TIME->Update();
 	INPUT->Update();
-	SCENE->Update();
-
-	// 최종 렌더 정보를 제출
-	_graphics->RenderEnd();
-	
+	SCENE->Update(); 
 }
 
 void Game::Render()
 {
-
+	RENDER->Update(_graphics);
 }

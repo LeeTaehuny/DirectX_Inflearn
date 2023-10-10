@@ -9,6 +9,7 @@ class Pipeline;
 class InputManager;
 class TimeManager;
 class ResourceManager;
+class RenderManager;
 
 class Game
 {
@@ -28,8 +29,7 @@ public:
 	shared_ptr<InputManager>	GetInputManager()		{ return _input; }
 	shared_ptr<TimeManager>		GetTimeManager()		{ return _time; }
 	shared_ptr<ResourceManager> GetResourceManager()	{ return _resource; }
-
-	shared_ptr<Pipeline> GetPipeline() { return _pipeline; }
+	shared_ptr<RenderManager>	GetRenderManager()		{ return _render; }
 
 private:
 	// 윈도우 핸들 번호를 저장하기 위한 변수를 선언합니다.
@@ -41,8 +41,6 @@ private:
 
 	// Graphics 타입의 Shared_ptr를 선언합니다.
 	shared_ptr<Graphics> _graphics;
-	// Pipeline 타입의 Shared_ptr를 선언합니다.
-	shared_ptr<Pipeline> _pipeline;
 
 private:
 	// 씬 매니저를 관리하는 2번째 방법
@@ -51,7 +49,8 @@ private:
 	shared_ptr<SceneManager> _scene;
 	shared_ptr<InputManager> _input;
 	shared_ptr<TimeManager> _time;
-	shared_ptr< ResourceManager> _resource;
+	shared_ptr<ResourceManager> _resource;
+	shared_ptr<RenderManager> _render;
 
 };
 

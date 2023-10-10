@@ -20,7 +20,7 @@ public:
 	void RemoveGameObject(shared_ptr<GameObject> gameObject);
 
 	// 게임 오브젝트를 반환하기 위한 함수를 정의합니다.
-	const vector<shared_ptr<GameObject>>& GetGameObjcets() { return _gameObjects; }
+	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
 
 private:
 	// 게임 오브젝트들을 저장하기 위한 벡터 컨테이너를 선언합니다.

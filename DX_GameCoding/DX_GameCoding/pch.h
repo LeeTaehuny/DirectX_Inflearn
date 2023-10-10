@@ -56,12 +56,18 @@ using namespace Microsoft::WRL;		// ComPtr 를 사용하기 위함
 #define TIME		GAME->GetTimeManager()
 #define INPUT		GAME->GetInputManager()
 #define RESOURCES	GAME->GetResourceManager()
+#define RENDER		GAME->GetRenderManager()
 
-// engine
+// Engine
+#include "Graphics.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "InputLayout.h"
+#include "Geometry.h"
 #include "GeometryHelper.h"
+#include "VertexData.h"
 #include "ShaderBase.h"
 #include "ConstantBuffer.h"
-
 #include "Texture.h"
 #include "RasterizerState.h"
 #include "SamplerState.h"

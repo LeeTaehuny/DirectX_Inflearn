@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include "ResourceBase.h"
-
+class ResourceBase;
 class Mesh;
 class Material;
 class Shader;

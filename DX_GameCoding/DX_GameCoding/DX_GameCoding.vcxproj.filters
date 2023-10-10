@@ -81,6 +81,9 @@
     <Filter Include="소스 파일\00. Engine\Resource">
       <UniqueIdentifier>{ad217e77-fe47-4c7f-91a0-aed3120d2ad7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\00. Engine\Manager\Render">
+      <UniqueIdentifier>{a72232b0-c8d1-493e-b38d-4a4ac5ab30e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DX_GameCoding.h">
@@ -203,6 +206,12 @@
     <ClInclude Include="Animation.h">
       <Filter>소스 파일\00. Engine\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>소스 파일\00. Engine\Manager\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderHelper.h">
+      <Filter>소스 파일\00. Engine\Manager\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX_GameCoding.rc">
@@ -319,6 +328,12 @@
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>소스 파일\00. Engine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>소스 파일\00. Engine\Manager\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderHelper.cpp">
+      <Filter>소스 파일\00. Engine\Manager\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

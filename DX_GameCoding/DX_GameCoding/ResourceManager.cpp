@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "ResourceBase.h"
 
 ResourceManager::ResourceManager(ComPtr<ID3D11Device> device) : _device(device)
 {
