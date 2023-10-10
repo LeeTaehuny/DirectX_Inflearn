@@ -28,10 +28,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    // 실제 게임 객체를 생성합니다.
-    Game game;
     // 게임을 초기화합니다.
-    game.Init(hWnd);
+    GGame->Init(hWnd);
 
     MSG msg = {};
 
@@ -48,9 +46,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             // 게임을 업데이트 합니다.
-            game.Update();
+            GGame->Update();
             // 게임을 렌더합니다.
-            game.Render();
+            GGame->Render();
         }
     }
 

@@ -50,16 +50,18 @@ using namespace Microsoft::WRL;		// ComPtr 를 사용하기 위함
 // assertion 체크
 #define CHECK(p) assert(SUCCEEDED(p));
 
+//#include "Game.h"
+#define GAME GGame
+#define SCENE		GAME->GetSceneManager()
+#define TIME		GAME->GetTimeManager()
+#define INPUT		GAME->GetInputManager()
+#define RESOURCES	GAME->GetResourceManager()
+
 // engine
-#include "Graphics.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "InputLayout.h"
-#include "Geometry.h"
 #include "GeometryHelper.h"
-#include "VertexData.h"
-#include "Shader.h"
+#include "ShaderBase.h"
 #include "ConstantBuffer.h"
+
 #include "Texture.h"
 #include "RasterizerState.h"
 #include "SamplerState.h"

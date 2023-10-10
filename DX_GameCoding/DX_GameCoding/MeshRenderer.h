@@ -1,5 +1,10 @@
 ﻿#pragma once
 #include "Component.h"
+
+class VertexBuffer;
+class IndexBuffer;
+class InputLayout;
+
 class MeshRenderer : public Component
 {
 	using Super = Component;

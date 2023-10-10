@@ -3,6 +3,14 @@
 
 #include "Camera.h"
 #include "MeshRenderer.h"
+#include "SceneManager.h"
+#include "InputManager.h"
+#include "TimeManager.h"
+#include "ResourceManager.h"
+#include "Graphics.h"
+#include "Pipeline.h"
+
+unique_ptr<Game> GGame = make_unique<Game>();
 
 Game::Game()
 {
@@ -21,38 +29,37 @@ void Game::Init(HWND hwnd)
 	_graphics = make_shared<Graphics>(hwnd);
 	// Pipeline 객체를 생성합니다.
 	_pipeline = make_shared<Pipeline>(_graphics->GetDeviceContext());
-	// GameObject 객체를 생성합니다.
-	_monster = make_shared<GameObject>(_graphics->GetDevice(), _graphics->GetDeviceContext());
-	{
-		// Transform 컴포넌트를 추가합니다.
-		_monster->GetOrAddTransform();
-		//_monster->GetTransform()->SetScale(Vec3(100.0f, 100.0f, 1.0f));
-		_monster->AddComponent(make_shared<MeshRenderer>(_graphics->GetDevice(), _graphics->GetDeviceContext()));
-	}
-	// GameObject 객체를 생성합니다.
-	_camera = make_shared<GameObject>(_graphics->GetDevice(), _graphics->GetDeviceContext());
-	{
-		_camera->GetOrAddTransform();
 
-		_camera->AddComponent(make_shared<Camera>());
-	}
+	_input = make_shared<InputManager>();
+	_input->Init(hwnd);
+
+	_time = make_shared<TimeManager>();
+	_time->Init();
+
+	_scene = make_shared<SceneManager>(_graphics);
+	_scene->Init();
+
+	_resource = make_shared<ResourceManager>(_graphics->GetDevice());
+	_resource->Init();
+
+	SCENE->LoadScene(L"Test");
 }
 
 void Game::Update()
 {
-	_monster->Update();
-	_camera->Update();
+	// 렌더를 위한 준비 작업
+	_graphics->RenderBegin();
+
+	TIME->Update();
+	INPUT->Update();
+	SCENE->Update();
+
+	// 최종 렌더 정보를 제출
+	_graphics->RenderEnd();
+	
 }
 
 void Game::Render()
 {
-	// 렌더를 위한 준비 작업
-	_graphics->RenderBegin();
 
-	//_monster->Render(_pipeline);
-	// TEMP
-	_monster->GetMeshRenderer()->Render(_pipeline);
-
-	// 최종 렌더 정보를 제출
-	_graphics->RenderEnd();
 }

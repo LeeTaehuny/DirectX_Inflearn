@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+class VertexBuffer;
+class IndexBuffer;
+class InputLayout;
+
 // 여러 물체들이 공용으로 사용할 정보들을 열거형으로 선언합니다.
 // * 대부분의 물체를 렌더링하기 위해 필요한 정보들
 struct PipelineInfo

@@ -1,5 +1,9 @@
 ﻿#include "pch.h"
 #include "Pipeline.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "InputLayout.h"
+#include "ConstantBuffer.h"
 
 Pipeline::Pipeline(ComPtr<ID3D11DeviceContext> deviceContext) : _deviceContext(deviceContext)
 {

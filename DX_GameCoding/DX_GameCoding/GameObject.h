@@ -4,6 +4,7 @@ class MonoBehavior;
 class Transform;
 class Camera;
 class MeshRenderer;
+class Component;
 
 class GameObject : public enable_shared_from_this<GameObject>
 {
