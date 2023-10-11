@@ -28,6 +28,18 @@ void ResourceManager::CreateDefaultTexture()
 		// 텍스처를 저장하기 위한 포인터 변수를 선언합니다.
 		auto texture = make_shared<Texture>(_device);
 		// 텍스처의 이름을 지정합니다.
+		texture->SetName(L"Snake");
+		// 텍스처를 생성합니다.
+		texture->Create(L"Snake.bmp");
+		// 텍스처를 리소스 목록에 추가합니다.
+		Add(texture->GetName(), texture);
+	}
+
+	// 애니메이션에 사용될 텍스처 생성(리소스 매니저에 추가)
+	{
+		// 텍스처를 저장하기 위한 포인터 변수를 선언합니다.
+		auto texture = make_shared<Texture>(_device);
+		// 텍스처의 이름을 지정합니다.
 		texture->SetName(L"test");
 		// 텍스처를 생성합니다.
 		texture->Create(L"test.png");
@@ -106,5 +118,19 @@ void ResourceManager::CreateDefaultMaterial()
 
 void ResourceManager::CreateDefaultAnimation()
 {
+	// 애니메이션 생성(리소스 매니저에 추가)
+	{
+		shared_ptr<Animation> animation = make_shared<Animation>();
+		animation->SetName(L"SnakeAnim");
+		animation->SetTexture(Get<Texture>(L"Snake"));
+		animation->SetLoop(true);
 
+		animation->AddKeyframe(Keyframe{ Vec2{0.0f, 0.0f}, Vec2{100.0f, 100.0f}, 0.1f });
+		animation->AddKeyframe(Keyframe{ Vec2{100.0f, 0.0f}, Vec2{100.0f, 100.0f}, 0.1f });
+		animation->AddKeyframe(Keyframe{ Vec2{200.0f, 0.0f}, Vec2{100.0f, 100.0f}, 0.1f });
+		animation->AddKeyframe(Keyframe{ Vec2{300.0f, 0.0f}, Vec2{100.0f, 100.0f}, 0.1f });
+
+		// 애니메이션을 리소스 매니저에 추가합니다.
+		Add(animation->GetName(), animation);
+	}
 }

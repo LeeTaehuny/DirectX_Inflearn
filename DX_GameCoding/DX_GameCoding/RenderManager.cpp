@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "Mesh.h"
+#include "Animator.h"
 
 RenderManager::RenderManager(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext)
 	: _device(device), _deviceContext(deviceContext)
@@ -28,10 +29,16 @@ void RenderManager::Init()
 	_transformBuffer = make_shared<ConstantBuffer<TransformData>>(_device, _deviceContext);
 	// ConstantBuffer 생성
 	_transformBuffer->Create();
+
 	// CameraData 타입의 정보를 사용하는 ConstantBuffer 객체를 생성합니다.
 	_cameraBuffer = make_shared<ConstantBuffer<CameraData>>(_device, _deviceContext);
 	// ConstantBuffer 생성
 	_cameraBuffer->Create();
+
+	// AnimationData 타입의 정보를 사용하는 ConstantBuffer 객체를 생성합니다.
+	_animationBuffer = make_shared<ConstantBuffer<AnimationData>>(_device, _deviceContext);
+	// ConstantBuffer 생성
+	_animationBuffer->Create();
 
 	// RasterizerState 객체를 생성합니다.
 	_rasterizerState = make_shared<RasterizerState>(_device);
@@ -81,6 +88,12 @@ void RenderManager::PushTransformData()
 	_transformBuffer->CopyData(_transformData);
 }
 
+void RenderManager::PushAnimationData()
+{
+	// 애니메이션 버퍼에 복사하기
+	_animationBuffer->CopyData(_animationData);
+}
+
 void RenderManager::GatherRenderableObjects()
 {
 	// 기존에 가지고 있던 물체들을 초기화합니다.
@@ -120,6 +133,39 @@ void RenderManager::RenderObject()
 		_transformData.matWorld = transform->GetWorldMatrix();
 		PushTransformData();
 
+		// Animation
+		// * 애니메이션이 존재하는지 확인합니다.
+		shared_ptr<Animator> animator = gameObject->GetAnimator();
+		// * 만약 애니메이션이 존재한다면?
+		if (animator)
+		{
+			// * animationData에 정보를 채워줍니다.
+			const Keyframe& keyframe = animator->GetCurrnetKeyframe();
+			_animationData.spriteOffset = keyframe.offset;
+			_animationData.spriteSize = keyframe.size;
+			_animationData.textureSize = animator->GetCurrentAnimation()->GetTextureSize();
+			_animationData.useAnimation = 1.0f;
+
+			PushAnimationData();
+
+			_pipeline->SetConstantBuffer(2, SS_VertexShader, _animationBuffer);
+			_pipeline->SetTexture(0, SS_PixelShader, animator->GetCurrentAnimation()->GetTexture());
+		}
+		// * 만약 애니메이션이 없다면?
+		else
+		{
+			// 데이터를 초기값으로 밀어줍니다.
+			_animationData.spriteOffset = Vec2(0.0f, 0.0f);
+			_animationData.spriteSize = Vec2(0.0f, 0.0f);
+			_animationData.textureSize = Vec2(0.0f, 0.0f);
+			_animationData.useAnimation = 0.0f;
+
+			PushAnimationData();
+
+			_pipeline->SetConstantBuffer(2, SS_VertexShader, _animationBuffer);
+			_pipeline->SetTexture(0, SS_PixelShader, meshRenderer->GetTexture());
+		}
+
 
 		PipelineInfo info;
 		info.inputLayout = meshRenderer->GetInputLayout();
@@ -136,7 +182,7 @@ void RenderManager::RenderObject()
 		_pipeline->SetConstantBuffer(0, SS_VertexShader, _cameraBuffer);
 		_pipeline->SetConstantBuffer(1, SS_VertexShader, _transformBuffer);
 
-		_pipeline->SetTexture(0, SS_PixelShader, meshRenderer->GetTexture());
+		//_pipeline->SetTexture(0, SS_PixelShader, meshRenderer->GetTexture());
 		_pipeline->SetSamplerState(0, SS_PixelShader, _samplerState);
 
 		_pipeline->DrawIndexed(meshRenderer->GetMesh()->GetIndexBuffer()->GetCount(), 0, 0);

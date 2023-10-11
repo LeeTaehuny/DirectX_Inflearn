@@ -5,6 +5,7 @@ class Transform;
 class Camera;
 class MeshRenderer;
 class Component;
+class Animator;
 
 class GameObject : public enable_shared_from_this<GameObject>
 {
@@ -27,6 +28,8 @@ public:
 	shared_ptr<Camera> GetCamera();
 	// MeshRenderer 컴포넌트를 반환하기 위한 함수를 선언합니다.
 	shared_ptr<MeshRenderer> GetMeshRenderer();
+	// Animator 컴포넌트를 반환하기 위한 함수를 선언합니다.
+	shared_ptr<Animator> GetAnimator();
 
 	// Transform 컴포넌트를 추가하거나 얻어오기 위한 함수를 선언합니다.
 	shared_ptr<Transform> GetOrAddTransform();

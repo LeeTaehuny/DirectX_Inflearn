@@ -28,6 +28,14 @@ cbuffer TransfromData : register(b1)
 	row_major matrix matWorld;
 }
 
+cbuffer AnimationData : register(b2)
+{
+	float2 spriteOffset;
+	float2 spriteSize;
+	float2 textureSize;
+	float useAnimation;
+}
+
 // VertexShader의 메인 함수를 정의합니다.
 // * VS_OUTPUT : 리턴 타입
 // * VS		   : 함수 명
@@ -46,6 +54,15 @@ VS_OUTPUT VS(VS_INPUT input)
 	// 최종 결과물을 토대로 출력 위치를 설정합니다.
 	output.position = position;
 	output.uv = input.uv;
+
+	// 만약 애니메이션을 사용한다면?
+	if (useAnimation == 1.0f)
+	{
+		// 그려주기 위한 전체 그림의 비율을 맞춰줍니다.
+		output.uv *= spriteSize / textureSize;
+		// 오프셋만큼 uv좌표를 옮겨줍니다.
+		output.uv += spriteOffset / textureSize;
+	}
 
 	// * 만들어진 구조체를 반환합니다.
 	return output;

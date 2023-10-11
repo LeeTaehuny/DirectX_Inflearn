@@ -21,4 +21,8 @@ void Texture::Create(const wstring& path)
 	// SRV를 생성합니다.
 	hr = ::CreateShaderResourceView(_device.Get(), img.GetImages(), img.GetImageCount(), md, _shaderResourceView.GetAddressOf());
 	CHECK(hr);
+
+	// 사이즈를 저장합니다.
+	_size.x = md.width;
+	_size.y = md.height;
 }

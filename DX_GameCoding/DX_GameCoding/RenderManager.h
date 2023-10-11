@@ -19,6 +19,7 @@ private:
 	// 데이터들을 버퍼로 넘겨주기 위한 함수들을 선언합니다.
 	void PushCamaraData();
 	void PushTransformData();
+	void PushAnimationData();
 
 	// 렌더링이 가능한 오브젝트들을 가져오기 위한 함수를 선언합니다.
 	void GatherRenderableObjects();
@@ -44,6 +45,8 @@ private:
 	shared_ptr<ConstantBuffer<TransformData>> _transformBuffer;
 
 	// Animation
+	AnimationData _animationData;
+	shared_ptr<ConstantBuffer<AnimationData>> _animationBuffer;
 
 private:
 	// RS

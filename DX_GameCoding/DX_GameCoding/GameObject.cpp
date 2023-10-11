@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "MeshRenderer.h"
 #include "Component.h"
+#include "Animator.h"
 
 GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext) : _device(device)
 {
@@ -119,8 +120,17 @@ shared_ptr<MeshRenderer> GameObject::GetMeshRenderer()
 	// MeshRenderer 타입의 컴포넌트를 받아옵니다.
 	shared_ptr<Component> component = GetFixedComponent(ComponentType::MeshRenderer);
 
-	// 받아온 컴포넌트를 Camera 타입으로 형변환하여 반환합니다.
+	// 받아온 컴포넌트를 MeshRenderer 타입으로 형변환하여 반환합니다.
 	return static_pointer_cast<MeshRenderer>(component);
+}
+
+shared_ptr<Animator> GameObject::GetAnimator()
+{
+	// Animator 타입의 컴포넌트를 받아옵니다.
+	shared_ptr<Component> component = GetFixedComponent(ComponentType::Animator);
+
+	// 받아온 컴포넌트를 Animator 타입으로 형변환하여 반환합니다.
+	return static_pointer_cast<Animator>(component);
 }
 
 shared_ptr<Transform> GameObject::GetOrAddTransform()
