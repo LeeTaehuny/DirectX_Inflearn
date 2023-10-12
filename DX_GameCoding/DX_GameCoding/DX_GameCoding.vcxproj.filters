@@ -218,6 +218,9 @@
     <ClInclude Include="CameraMove.h">
       <Filter>소스 파일\01. Main</Filter>
     </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>소스 파일\99. Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX_GameCoding.rc">
@@ -346,6 +349,9 @@
     </ClCompile>
     <ClCompile Include="CameraMove.cpp">
       <Filter>소스 파일\01. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>소스 파일\99. Headers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

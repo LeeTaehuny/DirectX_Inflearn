@@ -51,5 +51,10 @@ private:
 	shared_ptr<Texture> _texture;
 	// 키 프레임들을 저장하기 위한 배열을 선언합니다.
 	vector<Keyframe> _keyframes;
+
+	std::string WstrToStr(const std::wstring& source)
+	{
+		return std::string().assign(source.begin(), source.end());
+	}
 };
 

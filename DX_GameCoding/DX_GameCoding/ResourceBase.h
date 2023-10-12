@@ -35,12 +35,16 @@ public:
 	// 리소스의 고유 번호를 반환하기 위한 함수를 정의합니다.
 	uint32 GetID() { return _id; }
 
+	// 리소스의 고유 이름을 설정하기 위한 함수를 정의합니다.
+	void SetRName(wstring name) { _name = name; }
+
 protected:
 	// 리소스를 파일로부터 불러오고 저장하기 위한 함수를 선언합니다.
 	virtual void Load(const wstring& path) { }
 	virtual void Save(const wstring& path) { }
 
 private:
+	friend class Animation;
 	// 리소스의 타입 구분을 위한 열거형 타입의 변수를 선언합니다.
 	ResourceType _type = ResourceType::None;
 

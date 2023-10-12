@@ -132,5 +132,11 @@ void ResourceManager::CreateDefaultAnimation()
 
 		// 애니메이션을 리소스 매니저에 추가합니다.
 		Add(animation->GetName(), animation);
+
+		// XML
+		animation->Save(L"TestAnim.xml");
+
+		//shared_ptr<Animation> anim2 = make_shared<Animation>();
+		//anim2->Load(L"TestAnim.xml");
 	}
 }
