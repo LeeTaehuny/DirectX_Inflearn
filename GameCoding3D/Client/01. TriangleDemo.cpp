@@ -17,8 +17,8 @@ void TriangleDemo::Init()
 	}
 
 	// 정점 버퍼를 생성합니다.
-	_buffer = make_shared<VertexBuffer>();
-	_buffer->Create(_vertices);
+	_vertexBuffer = make_shared<VertexBuffer>();
+	_vertexBuffer->Create(_vertices);
 }
 
 void TriangleDemo::Update()
@@ -28,11 +28,11 @@ void TriangleDemo::Update()
 
 void TriangleDemo::Render()
 {
-	uint32 stride = _buffer->GetStride();
-	uint32 offset = _buffer->GetOffset();
+	uint32 stride = _vertexBuffer->GetStride();
+	uint32 offset = _vertexBuffer->GetOffset();
 
 	// IA 단계에 VertexBuffer를 연결시켜줍니다.
-	DC->IASetVertexBuffers(0, 1, _buffer->GetComPtr().GetAddressOf(), &stride, &offset);
+	DC->IASetVertexBuffers(0, 1, _vertexBuffer->GetComPtr().GetAddressOf(), &stride, &offset);
 
 	// 화면에 그려줍니다.
 	// * Triangle.fx의 T0의 P0 -> 빨간색

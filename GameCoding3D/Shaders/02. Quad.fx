@@ -3,12 +3,14 @@
 struct VertexInput
 {
 	float4 position : POSITION;
+	float4 color : COLOR;
 };
 
 // VertexOutput으로 나가는 구조체를 정의합니다.
 struct VertexOutput
 {
 	float4 position : SV_POSITION;
+	float4 color : COLOR;
 };
 
 // VS
@@ -16,6 +18,7 @@ VertexOutput VS(VertexInput input)
 {
 	VertexOutput output;
 	output.position = input.position;
+	output.color = input.color;
 
 	return output;
 }
@@ -23,18 +26,14 @@ VertexOutput VS(VertexInput input)
 // PS
 float4 PS(VertexOutput input) : SV_TARGET
 {
-	return float4(1, 0, 0, 1);
+	return input.color;
 }
 
-float4 PS2(VertexOutput input) : SV_TARGET
+// RS - 와이어프레임모드 설정
+RasterizerState FillModeWireFrame
 {
-	return float4(0, 1, 0, 1);
-}
-
-float4 PS3(VertexOutput input) : SV_TARGET
-{
-	return float4(0, 0, 1, 1);
-}
+	FillMode = Wireframe;
+};
 
 // Effect11
 technique11 T0
@@ -47,22 +46,15 @@ technique11 T0
 		SetPixelShader(CompileShader(ps_5_0, PS()));
 	}
 
+	// 와이어프레임 모드 출력
 	pass P1
 	{
-		// VS 설정 - 버전 5.0, 메인함수 : VS()
-		SetVertexShader(CompileShader(vs_5_0, VS()));
-		// PS 설정 - 버전 5.0, 메인함수 : PS2()
-		SetPixelShader(CompileShader(ps_5_0, PS2()));
-	}
-};
+		// RS 설정
+		SetRasterizerState(FillModeWireFrame);
 
-technique11 T1
-{
-	pass P0
-	{
 		// VS 설정 - 버전 5.0, 메인함수 : VS()
 		SetVertexShader(CompileShader(vs_5_0, VS()));
-		// PS 설정 - 버전 5.0, 메인함수 : PS3()
-		SetPixelShader(CompileShader(ps_5_0, PS3()));
+		// PS 설정 - 버전 5.0, 메인함수 : PS()
+		SetPixelShader(CompileShader(ps_5_0, PS()));
 	}
 };
