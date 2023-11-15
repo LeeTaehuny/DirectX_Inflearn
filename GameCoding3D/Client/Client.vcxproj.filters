@@ -10,6 +10,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{b7cc3f37-4fa6-46a4-9323-a9a13e7aad13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Camera">
+      <UniqueIdentifier>{9dbc6584-13e1-4551-b2e9-dbeccc359878}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -26,6 +29,12 @@
     </ClCompile>
     <ClCompile Include="03. ConstBufferDemo.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="04. CameraDemo.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Main\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +53,12 @@
     <ClInclude Include="03. ConstBufferDemo.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="04. CameraDemo.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Main\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Shaders\01. Triangle.fx">
@@ -53,6 +68,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Shaders\03. ConstBuffer.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\04. World.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
