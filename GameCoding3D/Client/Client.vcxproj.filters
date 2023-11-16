@@ -36,6 +36,9 @@
     <ClCompile Include="CameraScript.cpp">
       <Filter>Main\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="05. TextureDemo.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -58,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="CameraScript.h">
       <Filter>Main\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="05. TextureDemo.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,19 +1,21 @@
+// 외부에서 연결하기 위한 변수들
 matrix World;
 matrix View;
 matrix Projection;
+Texture2D Texture0;
 
 // VertexInput 단계에서 들어오는 구조체를 정의합니다.
 struct VertexInput
 {
 	float4 position : POSITION;
-	float4 color : COLOR;
+	float2 uv : TEXCOORD;
 };
 
 // VertexOutput으로 나가는 구조체를 정의합니다.
 struct VertexOutput
 {
 	float4 position : SV_POSITION;
-	float4 color : COLOR;
+	float2 uv : TEXCOORD;
 };
 
 // VS
@@ -25,15 +27,19 @@ VertexOutput VS(VertexInput input)
 	output.position = mul(input.position, World);
 	output.position = mul(output.position, View);
 	output.position = mul(output.position, Projection);
-	output.color = input.color;
+	output.uv = input.uv;
 
 	return output;
 }
 
+// SamplerState
+SamplerState Sampler0;
+
 // PS
 float4 PS(VertexOutput input) : SV_TARGET
 {
-	return input.color;
+	// 생성한 SmaplerState를 기준으로 텍스처의 해당 uv 좌표에 있는 색상을 꺼내줍니다.
+	return Texture0.Sample(Sampler0, input.uv);
 }
 
 // RS - 와이어프레임모드 설정
