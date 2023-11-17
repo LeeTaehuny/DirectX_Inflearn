@@ -39,6 +39,9 @@
     <ClCompile Include="05. TextureDemo.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="06. SamplerDemo.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -65,6 +68,9 @@
     <ClInclude Include="05. TextureDemo.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="06. SamplerDemo.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Shaders\01. Triangle.fx">
@@ -77,6 +83,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="..\Shaders\04. World.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\05. Sampler.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
