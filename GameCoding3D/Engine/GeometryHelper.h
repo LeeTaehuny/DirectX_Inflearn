@@ -15,6 +15,6 @@ public:
 	// * 구
 	static void CreateSphere(shared_ptr<Geometry<VertexTextureData>> geometry);
 	// * 그리드
-	static void CreateGrid(shared_ptr<Geometry<VertexTextureData>> geometry);
+	static void CreateGrid(shared_ptr<Geometry<VertexTextureData>> geometry, int32 sizeX, int32 sizeZ);
 };
 

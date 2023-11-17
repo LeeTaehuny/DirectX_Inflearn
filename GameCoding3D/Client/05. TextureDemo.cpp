@@ -17,7 +17,10 @@ void TextureDemo::Init()
 		// 사각형 만들기
 		{
 			// GeometryHelper에 추가한 함수를 통해 사각형의 기하학적인 정보를 세팅합니다.
-			GeometryHelper::CreateQuad(_geometry);
+			//GeometryHelper::CreateQuad(_geometry);
+			//GeometryHelper::CreateCube(_geometry);
+			//GeometryHelper::CreateSphere(_geometry);
+			GeometryHelper::CreateGrid(_geometry, 256, 256);
 		}
 
 		// 정점 버퍼를 생성합니다.
@@ -75,5 +78,5 @@ void TextureDemo::Render()
 	DC->IASetIndexBuffer(_indexBuffer->GetComPtr().Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// 화면에 그려줍니다.
-	_shader->DrawIndexed(0, 0, _indexBuffer->GetCount(), 0, 0);
+	_shader->DrawIndexed(0, 1, _indexBuffer->GetCount(), 0, 0);
 }
