@@ -78,7 +78,7 @@ void SamplerDemo::Render()
 	};
 	// 셰이더 파일에 SamplerAdress를 구분짓는 값을 전달합니다.
 	// * 셰이더 파일에 존재하는 Address(스칼라 값)을 가져와 Int데이터를 설정합니다.
-	_shader->GetScalar("Address")->SetInt(ADDRESS_BORDER);
+	_shader->GetScalar("Address")->SetInt(ADDRESS_WRAP);
 
 
 	uint32 stride = _vertexBuffer->GetStride();

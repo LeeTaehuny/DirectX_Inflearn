@@ -7,7 +7,7 @@
 void TextureDemo::Init()
 {
 	// 셰이더 fx를 생성합니다.
-	_shader = make_shared<Shader>(L"04. World.fx");
+	_shader = make_shared<Shader>(L"04. Texture.fx");
 
 	/** Object */
 	{
