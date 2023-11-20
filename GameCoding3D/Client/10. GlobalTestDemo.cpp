@@ -1,0 +1,67 @@
+﻿#include "pch.h"
+#include "10. GlobalTestDemo.h"
+#include "GeometryHelper.h"
+#include "Camera.h"
+#include "CameraScript.h"
+#include "MeshRenderer.h"
+
+void GlobalTestDemo::Init()
+{
+	_shader = make_shared<Shader>(L"08. GlobalTest.fx");
+	// RENDER는 사실상 씬에서 동작하는 것이 좋을 것 같지만 씬이 아직 없으므로 여기서 테스트
+	RENDER->Init(_shader);
+
+	/** 카메라 */
+	{
+		// 카메라를 저장하기 위한 게임 오브젝트를 생성합니다.
+		_camera = make_shared<GameObject>();
+		// 해당 게임 오브젝트에 Transform 컴포넌트를 추가합니다.
+		_camera->GetOrAddTransform();
+		// 해당 게임 오브젝트에 카메라 컴포넌트를 추가합니다.
+		_camera->AddComponent(make_shared<Camera>());
+		// 생성한 카메라의 이동 스크립트(CameraScript)를 추가합니다.
+		_camera->AddComponent(make_shared<CameraScript>());
+	}
+
+	/** Object */
+	{
+		// 게임 오브젝트를 생성합니다.
+		_obj = make_shared<GameObject>();
+		// 해당 게임 오브젝트에 Transform 컴포넌트를 추가합니다.
+		_obj->GetOrAddTransform();
+		// 해당 게임 오브젝트에 필요한 컴포넌트들을 추가합니다.
+		_obj->AddComponent(make_shared<MeshRenderer>());
+		// MeshRenderer는 Mesh, Shader, Texture 정보를 가지고 있습니다.
+		// * 부품의 추가 정보를 넣어줍니다.
+		{
+			// 셰이더 정보를 추가합니다.
+			_obj->GetMeshRenderer()->SetShader(_shader);
+		}
+		{
+			// 리소스 매니저의 초기화를 수행합니다. (기본 도형 생성)
+			RESOURCES->Init();
+			
+			// Sphere의 기하학적 모형에 대한 정보를 저장합니다.
+			shared_ptr<Mesh> mesh = RESOURCES->Get<Mesh>(L"Sphere");
+			_obj->GetMeshRenderer()->SetMesh(mesh);
+		}
+		{
+			// 텍스처 정보를 추가합니다.
+			shared_ptr<Texture> texture = RESOURCES->Load<Texture>(L"Veigar", L"..\\Resources\\Textures\\veigar.jpg");
+			_obj->GetMeshRenderer()->SetTexture(texture);
+		}
+	}
+
+}
+
+void GlobalTestDemo::Update()
+{
+	_camera->Update();
+	// 카메라의 수정된 정보를 셰이더에 Push합니다.
+	RENDER->Update();
+	_obj->Update();
+}
+
+void GlobalTestDemo::Render()
+{
+}

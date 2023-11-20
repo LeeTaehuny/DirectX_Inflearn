@@ -20,16 +20,16 @@ void MeshRenderer::Update()
 	if (_mesh == nullptr || _texture == nullptr || _shader == nullptr)
 		return;
 
-	auto world = GetTransform()->GetWorldMatrix();
-	_shader->GetMatrix("World")->SetMatrix((float*)&world);
-	
-	_shader->GetMatrix("View")->SetMatrix((float*)&Camera::S_MatView);
-	_shader->GetMatrix("Projection")->SetMatrix((float*)&Camera::S_MatProjection);
 	_shader->GetSRV("Texture0")->SetResource(_texture->GetComPtr().Get());
-	
-	// TEMP
-	Vec3 lightDir = {0.f, 0.f, 1.f};
-	_shader->GetVector("LightDir")->SetFloatVector((float*)&lightDir);
+
+	// 현재는 MeshRenderer에서 WVP 행렬을 적용시키고 있습니다.
+	// * 하지만 World와 View/Projection이 같이 수정되는 부분이 이상합니다.
+	// * RenderManager를 만들어 일단은 공용적으로 케어할 수 있게 빼주도록 하겠습니다.
+
+	// MeshRenderer 컴포넌트에서 처리할 내용은 각각의 메시가 가지고 있는 World 정보입니다.
+	// * 공용적인 V, P는 다른곳에서 셰이더에 Push하도록 하겠습니다.
+	auto world = GetTransform()->GetWorldMatrix();
+	RENDER->PushTransformData(TransformDesc{ world });
 
 	uint32 stride = _mesh->GetVertexBuffer()->GetStride();
 	uint32 offset = _mesh->GetVertexBuffer()->GetOffset();
