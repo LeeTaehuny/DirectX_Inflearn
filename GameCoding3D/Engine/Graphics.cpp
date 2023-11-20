@@ -7,13 +7,15 @@ void Graphics::Init(HWND hwnd)
 
 	CreateDeviceAndSwapChain();
 	CreateRenderTargetView();
+	CreateDepthStencilView();
 	SetViewport();
 }
 
 void Graphics::RenderBegin()
 {
-	_deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), nullptr);
+	_deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
 	_deviceContext->ClearRenderTargetView(_renderTargetView.Get(), (float*)(&GAME->GetGameDesc().clearColor));
+	_deviceContext->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	_deviceContext->RSSetViewports(1, &_viewport);
 }
 
@@ -71,6 +73,50 @@ void Graphics::CreateRenderTargetView()
 
 	hr = _device->CreateRenderTargetView(backBuffer.Get(), nullptr, _renderTargetView.GetAddressOf());
 	CHECK(hr);
+}
+
+void Graphics::CreateDepthStencilView()
+{
+	// 화면과 동일한 크기의 텍스처(이미지)를 생성합니다.
+	{
+		// * 정보 생성
+		D3D11_TEXTURE2D_DESC desc = { 0 };
+		ZeroMemory(&desc, sizeof(desc));
+		desc.Width = static_cast<uint32>(GAME->GetGameDesc().width);
+		desc.Height = static_cast<uint32>(GAME->GetGameDesc().height);
+
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		// * 포맷 설정 (depth : 24bit, stencil :8bit 사용)
+		desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		// * Depth Stencil 용도로 사용
+		desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+
+		// * 텍스처2D 생성
+		HRESULT hr = DEVICE->CreateTexture2D(&desc, nullptr, _depthStencilTexture.GetAddressOf());
+		CHECK(hr);
+	}
+
+	// 생성한 텍스처를 묘사하기 위한 뷰 생성
+	{
+		D3D11_DEPTH_STENCIL_VIEW_DESC desc;
+		ZeroMemory(&desc, sizeof(desc));
+		desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.MipSlice = 0;
+
+		// 생성한 텍스처에 해당하는 DSV 생성
+		HRESULT hr = DEVICE->CreateDepthStencilView(_depthStencilTexture.Get(), &desc, _depthStencilView.GetAddressOf());
+		CHECK(hr);
+	}
+
 }
 
 void Graphics::SetViewport()
