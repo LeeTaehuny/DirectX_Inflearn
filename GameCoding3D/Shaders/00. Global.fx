@@ -64,10 +64,20 @@ struct VertexTextureNormal
 ////////////////////
 
 // VS의 결과물로 나올 구조체를 미리 용도별로 구분해 선언해주도록 하겠습니다.
-// * Mesh
+// * 일반
 struct VertexOutput
 {
 	float4 position : SV_POSITION;
+	float2 uv : TEXCOORD;
+	float3 normal : NORMAL;
+};
+
+// * Mesh
+struct MeshOutput
+{
+	float4 position : SV_POSITION;
+	// 조명연산에 필요한 월드 좌표를 저장하기 위한 변수
+	float3 worldPosition : POSITION1;
 	float2 uv : TEXCOORD;
 	float3 normal : NORMAL;
 };
