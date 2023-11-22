@@ -19,6 +19,18 @@ void RenderManager::Init(shared_ptr<Shader> shader)
 	_transformBuffer->Create();
 	// * 셰이더에 저장된 위치 버퍼를 가져와 EffectBuffer에 저장합니다.
 	_transformEffectBuffer = _shader->GetConstantBuffer("TransformBuffer");
+
+	// * 빛 관련 버퍼들을 생성합니다.
+	_lightBuffer = make_shared<ConstantBuffer<LightDesc>>();
+	_lightBuffer->Create();
+
+	_materialBuffer = make_shared<ConstantBuffer<MaterialDesc>>();
+	_materialBuffer->Create();
+
+	// * 셰이더에 저장된 위치 버퍼를 가져와 EffectBuffer에 저장합니다.
+	_lightEffectBuffer = _shader->GetConstantBuffer("LightBuffer");
+	_materialEffectBuffer = _shader->GetConstantBuffer("MaterialBuffer");
+
 }
 
 void RenderManager::Update()
@@ -49,4 +61,18 @@ void RenderManager::PushTransformData(const TransformDesc& desc)
 	_transformBuffer->CopyData(_transformDesc);
 	// 복사된 데이터를 셰이더에 연결시켜줍니다. (셰이더에 밀어넣기)
 	_transformEffectBuffer->SetConstantBuffer(_transformBuffer->GetComPtr().Get());
+}
+
+void RenderManager::PushLightData(const LightDesc& desc)
+{
+	_lightDesc = desc;
+	_lightBuffer->CopyData(_lightDesc);
+	_lightEffectBuffer->SetConstantBuffer(_lightBuffer->GetComPtr().Get());
+}
+
+void RenderManager::PushMaterialData(const MaterialDesc& desc)
+{
+	_materialDesc = desc;
+	_materialBuffer->CopyData(_materialDesc);
+	_materialEffectBuffer->SetConstantBuffer(_materialBuffer->GetComPtr().Get());
 }
