@@ -137,4 +137,34 @@ float4 ComputeLight(float3 normal, float2 uv, float3 worldPosition)
 	return ambientColor + diffuseColor + specularColor + emissiveColor;
 }
 
+void ComputeNormalMapping(inout float3 normal, float3 tangent, float2 uv)
+{
+	// Normal Map으로부터 픽셀 값을 추출합니다.
+	// * [0, 255]사이의 값이 smapling을 통해 [0, 1]로 변환됩니다.
+	float4 map = NormalMap.Sample(LinearSampler, uv);
+
+	// 만약 RGB 값이 존재하지 않으면 반환합니다. (RGB가 000인 경우 굳이 연산할 필요가 없기 때문)
+	if (any(map.rgb) == false)
+		return;
+
+	// TBN 좌표계의 방향벡터를 구해줍니다.
+	float3 N = normalize(normal);		// z
+	float3 T = normalize(tangent);		// x
+	float3 B = normalize(cross(N, T));	// y
+
+	// tangent space -> world space 변환 행렬을 만들어줍니다.
+	float3x3 TBN = float3x3(T, B, N);
+
+	// [0, 1] 범위에서 [-1, 1] 범위로 변환합니다.
+	float3 tangentSpaceNormal = (map.rgb * 2.0f - 1.0f);
+
+	// tangentSpaceNormal은 Tangent Space 기준 좌표입니다.
+	// * 위에서 구한 tangent space -> world space 변환 행렬을 통해 world space 기준 normal 좌표로 변환시켜줍니다.
+	float3 worldNormal = mul(tangentSpaceNormal, TBN);
+
+	// normal에 저장합니다.
+	// inout 키워드 : 포인터와 비슷한 의미로 원본에 수정가능
+	normal = worldNormal;
+}
+
 #endif

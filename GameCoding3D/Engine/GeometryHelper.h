@@ -28,5 +28,11 @@ public:
 	// * 그리드
 	static void CreateGrid(shared_ptr<Geometry<VertexTextureNormalData>> geometry, int32 sizeX, int32 sizeZ);
 
+	// VertexTextureNormalTangentData 형식을 사용해 도형을 만들기 위한 함수들을 선언합니다.
+	static void CreateQuad(shared_ptr<Geometry<VertexTextureNormalTangentData>> geometry);
+	static void CreateCube(shared_ptr<Geometry<VertexTextureNormalTangentData>> geometry);
+	static void CreateSphere(shared_ptr<Geometry<VertexTextureNormalTangentData>> geometry);
+	static void CreateGrid(shared_ptr<Geometry<VertexTextureNormalTangentData>> geometry, int32 sizeX, int32 sizeZ);
+
 };
 
