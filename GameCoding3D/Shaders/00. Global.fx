@@ -15,6 +15,8 @@ cbuffer GlobalBuffer
 	matrix P;
 	// V x P와 VP는 동일하므로 연산한 결과를 묶어서 같이 넘겨주도록 합니다.
 	matrix VP;
+	// View Inverse
+	matrix VInv;
 };
 
 // * W
@@ -142,7 +144,7 @@ pass name											\
 
 float3 CameraPosition()
 {
-	return -V._41_42_43;
+	return VInv._41_42_43;
 }
 
 #endif

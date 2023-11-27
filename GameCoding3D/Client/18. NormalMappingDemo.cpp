@@ -66,6 +66,7 @@ void NormalMappingDemo::Init()
 			desc.ambient = Vec4(1.0f);
 			desc.diffuse = Vec4(1.0f);
 			desc.specular = Vec4(1.0f);
+			desc.emissive = Vec4(1.0f);
 
 			// 리소스 매니저에 Veigar 이름으로 해당 머터리얼 등록
 			RESOURCES->Add(L"Leather", material);
@@ -102,7 +103,7 @@ void NormalMappingDemo::Init()
 			}
 			{
 				// Material을 리소스 매니저에서 가져옵니다.
-				auto material = RESOURCES->Get<Material>(L"Wood");
+				auto material = RESOURCES->Get<Material>(L"Leather");
 				// MeshRenderer()에 머터리얼을 설정합니다.
 				_obj->GetMeshRenderer()->SetMaterial(material);
 			}
@@ -142,9 +143,10 @@ void NormalMappingDemo::Update()
 	RENDER->Update();
 
 	LightDesc lightDesc;
-	lightDesc.ambient = Vec4(0.5f);
-	lightDesc.diffuse = Vec4(1.0f);
-	lightDesc.specular = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	lightDesc.ambient = Vec4(0.0f);
+	lightDesc.diffuse = Vec4(0.0f);
+	lightDesc.specular = Vec4(0.0f);
+	lightDesc.emissive = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	lightDesc.direction = Vec3(1.0f, 0.0f, 1.0f);
 
 	RENDER->PushLightData(lightDesc);

@@ -45,6 +45,7 @@ void RenderManager::PushGlobalData(const Matrix& view, const Matrix& projection)
 	_globalDesc.P = projection;
 	_globalDesc.V = view;
 	_globalDesc.VP = view * projection;
+	_globalDesc.VInv = view.Invert();
 
 	// CPU에서 연산이 완료된 데이터를 GPU에 복사합니다.
 	_globalBuffer->CopyData(_globalDesc);

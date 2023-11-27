@@ -9,6 +9,7 @@ struct GlobalDesc
 	Matrix V = Matrix::Identity;
 	Matrix P = Matrix::Identity;
 	Matrix VP = Matrix::Identity;
+	Matrix VInv = Matrix::Identity;
 };
 
 // W와 관련된 정보를 버퍼에 넘겨주기 위한 정보 구조체를 선언합니다.

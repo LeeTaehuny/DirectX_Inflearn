@@ -1,0 +1,23 @@
+﻿#include "pch.h"
+#include "Main.h"
+#include "Engine/Game.h"
+
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+{
+	// 게임의 기본 정보를 설정합니다.
+	GameDesc desc;
+	desc.appName = L"GameCoding";
+	desc.hInstance = hInstance;
+	desc.vsync = false;
+	desc.hWnd = NULL;
+	desc.width = 800;
+	desc.height = 600;
+	desc.clearColor = Color(0.0f, 0.0f, 0.0f, 0.0f);
+
+	desc.app = nullptr;//make_shared<NormalMappingDemo>();
+
+	GAME->Run(desc);
+
+	return 0;
+}
