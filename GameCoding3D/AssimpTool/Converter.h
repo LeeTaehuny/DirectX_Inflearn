@@ -26,7 +26,7 @@ private:
 
 	// Model 파일을 저장하기 위한 함수를 선언합니다.
 	void WriteModelFile(wstring finalPath);
-	// Texture 파일을 저장하기 위한 함수를 선언합니다.
+	// Texture 파일을 Material Data에 저장하기 위한 함수를 선언합니다.
 	string WriteTexture(string saveFolder, string file);
 
 private:

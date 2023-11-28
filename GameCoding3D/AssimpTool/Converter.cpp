@@ -65,11 +65,118 @@ void Converter::ExportMaterialData(wstring savePath)
 
 void Converter::ReadModelData(aiNode* node, int32 index, int32 parent)
 {
+	// Bone 정보를 저장하기 위한 변수를 선언합니다.
+	shared_ptr<asBone> bone = make_shared<asBone>();
+	// 전달받은 인자에 따라 데이터를 삽입합니다.
+	bone->index = index;
+	bone->parent = parent;
+	bone->name = node->mName.C_Str();
 
+	// 상대적인 Transform을 저장합니다. (직속 부모 기준)
+	// * 해당 노드의 SRT 정보를 가져옵니다. (0번째 행렬[4x4] 주소 복사)
+	Matrix transform(node->mTransformation[0]);
+	// * FBX 포맷에서는 트랜스폼 정보가 뒤집혀 있으므로 다시 뒤집어 뼈대의 트랜스폼으로 설정합니다.
+	bone->transform = transform.Transpose();
+
+	// 위에서 구한 Transform 정보는 직속 부모를 기준으로 하는 Transform입니다.
+	// -> 이를 해당 물체의 트랜스폼(Local)을 만들고 싶다면?
+	// -> 부모의 Transform을 하나씩 타고 올라가며 곱해 주면 됩니다.
+	{
+		// Root (Local)
+		Matrix matParent = Matrix::Identity;
+
+		// 만약 부모가 존재한다면?
+		if (parent >= 0)
+		{
+			// 부모의 Transform 정보를 저장합니다.
+			// * 부모의 Transform 정보는 직속 부모부터 Root까지의 변환 행렬이므로, 하나씩 타고 올라가며 연산할 필요가 없습니다.
+			//   (루트부터 재귀적으로 내려가고 있기 때문에 이미 부모의 transform에는 Root까지의 변환 행렬이 저장되어 있음)
+			matParent = _bones[parent]->transform;
+		}
+
+		// Local (Root) Transform
+		// * 자신의 Transform 정보에 부모의 Transform 정보를 곱해 Root를 기준으로 하는 Transform을 저장합니다.
+		bone->transform = bone->transform * matParent;
+	}
+	// 생성한 bone을 추가해줍니다.
+	_bones.push_back(bone);
+
+	// Mesh 데이터를 읽어옵니다.
+	ReadMeshData(node, index);
+
+	// 해당 노드의 자식 수만큼 반복합니다. (재귀)
+	for (uint32 i = 0; i < node->mNumChildren; i++)
+		ReadModelData(node->mChildren[i], _bones.size(), index);
 }
 
 void Converter::ReadMeshData(aiNode* node, int32 bone)
 {
+	// Mesh가 존재하지 않으면 return 합니다.
+	if (node->mNumMeshes < 1)
+		return;
+
+	// Mesh를 저장하기 위한 변수를 생성합니다.
+	shared_ptr<asMesh> mesh = make_shared<asMesh>();
+	// 전달받은 인자에 따라 데이터를 삽입합니다.
+	mesh->name = node->mName.C_Str();
+	mesh->boneIndex = bone;
+
+	// sub Mesh가 여러 개 존재할 수 있습니다. Mesh의 수만큼 반복합니다.
+	for (uint32 i = 0; i < node->mNumMeshes; i++)
+	{
+		// 해당 Mesh의 인덱스를 저장합니다.
+		uint32 index = node->mMeshes[i];
+		// 저장한 인덱스를 토대로 원본 Mesh를 가져옵니다.
+		const aiMesh* srcMesh = _scene->mMeshes[index];
+
+		// Mesh를 그리기 위한 Material 정보 또한 FBX에서 들고 있습니다.
+		// * 우리만의 데이터로 변경해줍니다.
+
+		// Material Name을 가져와 설정합니다.
+		const aiMaterial* material = _scene->mMaterials[srcMesh->mMaterialIndex];
+		mesh->materialName = material->GetName().C_Str();
+
+		// 지금까지 저장된 정점의 개수를 불러옵니다.
+		// * sub Mesh가 여러개인 경우 인덱스 번호가 겹치지 않도록 하기 위해 마지막에 정점의 개수를 더해주는 용도로 사용할 것입니다.
+		const uint32 startVertex = mesh->vertices.size();
+
+		// 정점들을 순회하며 정보를 추출합니다.
+		for (uint32 v = 0; v < srcMesh->mNumVertices; v++)
+		{
+			// Vertex를 저장하기 위한 변수를 선언합니다. (VertexTextureNormalTangentBlendData)
+			VertexType vertex;
+			// Position
+			::memcpy(&vertex.position, &srcMesh->mVertices[v], sizeof(Vec3));
+
+			// UV
+			if (srcMesh->HasTextureCoords(0))
+				::memcpy(&vertex.uv, &srcMesh->mTextureCoords[0][v], sizeof(Vec2));
+
+			// Normal
+			if (srcMesh->HasNormals())
+				::memcpy(&vertex.normal, &srcMesh->mNormals[v], sizeof(Vec3));
+
+			// ... 나중에 추가로 필요한 정보를 채워줄 수 있습니다.
+
+			// 추출한 정보를 mesh의 Vertices 배열에 추가합니다.
+			mesh->vertices.push_back(vertex);
+		}
+
+		// Index를 기준으로 순회합니다.
+		for (uint32 f = 0; f < srcMesh->mNumFaces; f++)
+		{
+			// 인덱스 정보를 추출합니다.
+			aiFace& face = srcMesh->mFaces[f];
+
+			for (uint32 k = 0; k < face.mNumIndices; k++)
+			{
+				mesh->indices.push_back(face.mIndices[k] + startVertex);
+			}
+		}
+	}
+
+	// 생성한 mesh를 추가해줍니다.
+	_meshes.push_back(mesh);
 }
 
 void Converter::ReadMaterialData()
@@ -125,6 +232,7 @@ void Converter::ReadMaterialData()
 
 void Converter::WriteModelFile(wstring finalPath)
 {
+	
 }
 
 void Converter::WriteMaterialData(wstring finalPath)
@@ -209,5 +317,66 @@ void Converter::WriteMaterialData(wstring finalPath)
 
 string Converter::WriteTexture(string saveFolder, string file)
 {
-	return "";
+	// 파일 이름을 불러옵니다. 
+	string fileName = filesystem::path(file).filename().string();
+	// 폴더 이름을 불러옵니다.
+	string folderName = filesystem::path(saveFolder).filename().string();
+
+	// 텍스처가 모델 파일 자체에 포함되어 있는 경우 파일의 경로에 따라 Embedded Texture를 가져옵니다.
+	const aiTexture* srcTexture = _scene->GetEmbeddedTexture(file.c_str());
+	if (srcTexture)
+	{
+		string pathStr = saveFolder + fileName;
+
+		if (srcTexture->mHeight == 0)
+		{
+			//shared_ptr<FileUtils> file = make_shared<FileUtils>();
+			//file->Open(Utils::ToWString(pathStr), FileMode::Write);
+			//file->Write(srcTexture->pcData, srcTexture->mWidth);
+		}
+		else
+		{
+			D3D11_TEXTURE2D_DESC desc;
+			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+			desc.Width = srcTexture->mWidth;
+			desc.Height = srcTexture->mHeight;
+			desc.MipLevels = 1;
+			desc.ArraySize = 1;
+			desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
+			desc.Usage = D3D11_USAGE_IMMUTABLE;
+
+			D3D11_SUBRESOURCE_DATA subResource = { 0 };
+			subResource.pSysMem = srcTexture->pcData;
+
+			ComPtr<ID3D11Texture2D> texture;
+			HRESULT hr = DEVICE->CreateTexture2D(&desc, &subResource, texture.GetAddressOf());
+			CHECK(hr);
+
+			DirectX::ScratchImage img;
+			::CaptureTexture(DEVICE.Get(), DC.Get(), texture.Get(), img);
+
+			// Save To File
+			hr = DirectX::SaveToDDSFile(*img.GetImages(), DirectX::DDS_FLAGS_NONE, Utils::ToWString(fileName).c_str());
+			CHECK(hr);
+		}
+	}
+	// 일반적으로 텍스처가 내장되어있지 않은 경우입니다.
+	// * 원본 파일 경로에 접근해 다른 경로로 이동시키는 것이 목적입니다.
+	else
+	{
+		// src 경로
+		string originStr = (filesystem::path(_assetPath) / folderName / file).string();
+		Utils::Replace(originStr, "\\", "/");
+
+		// dest 경로
+		string pathStr = (filesystem::path(saveFolder) / fileName).string();
+		Utils::Replace(pathStr, "\\", "/");
+
+		// src 경로에 위치한 파일을 dest 경로에 복사합니다.
+		::CopyFileA(originStr.c_str(), pathStr.c_str(), false);
+	}
+
+	return fileName;
 }
