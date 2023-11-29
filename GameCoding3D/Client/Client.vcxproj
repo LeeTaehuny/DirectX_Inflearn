@@ -70,16 +70,7 @@
   <ItemGroup>
     <FxCompile Include="..\Shaders\00. Global.fx" />
     <FxCompile Include="..\Shaders\00. Light.fx" />
-    <FxCompile Include="..\Shaders\01. Triangle.fx">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
+    <FxCompile Include="..\Shaders\01. Triangle.fx" />
     <FxCompile Include="..\Shaders\02. Quad.fx" />
     <FxCompile Include="..\Shaders\03. ConstBuffer.fx" />
     <FxCompile Include="..\Shaders\04. Texture.fx" />
@@ -93,6 +84,7 @@
     <FxCompile Include="..\Shaders\12. Lighting_Emissive.fx" />
     <FxCompile Include="..\Shaders\13. Lighting.fx" />
     <FxCompile Include="..\Shaders\14. NormalMapping.fx" />
+    <FxCompile Include="..\Shaders\15. ModelDemo.fx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

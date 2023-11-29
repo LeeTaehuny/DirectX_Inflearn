@@ -19,14 +19,20 @@
     <Filter Include="Game\Week2">
       <UniqueIdentifier>{ce10ad8f-ec54-425a-a741-1ebcc5aabaa6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\Week1">
-      <UniqueIdentifier>{d5c44d5a-d7c3-42c3-ad78-c7b473116459}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Week2">
       <UniqueIdentifier>{60d4ee3b-d693-4666-a5d5-e437a54a62fc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders\Common">
       <UniqueIdentifier>{f05cfd53-ce19-4115-a96d-b6295e1c90e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Week3">
+      <UniqueIdentifier>{603fc900-adfb-4682-869d-a9ed7e9d54b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Week1">
+      <UniqueIdentifier>{da539efc-3a9e-4f7d-897f-668b827e0dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Week3">
+      <UniqueIdentifier>{60f9beac-5b5e-44b5-9c1e-c1aa466d2fa1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,27 +166,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Shaders\01. Triangle.fx">
-      <Filter>Shaders\Week1</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Shaders\02. Quad.fx">
-      <Filter>Shaders\Week1</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Shaders\03. ConstBuffer.fx">
-      <Filter>Shaders\Week1</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Shaders\04. Texture.fx">
-      <Filter>Shaders\Week1</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Shaders\05. Sampler.fx">
-      <Filter>Shaders\Week1</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Shaders\06. Terrain.fx">
-      <Filter>Shaders\Week1</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Shaders\07. Normal.fx">
-      <Filter>Shaders\Week1</Filter>
-    </FxCompile>
     <FxCompile Include="..\Shaders\00. Global.fx">
       <Filter>Shaders\Common</Filter>
     </FxCompile>
@@ -207,6 +192,30 @@
     </FxCompile>
     <FxCompile Include="..\Shaders\14. NormalMapping.fx">
       <Filter>Shaders\Week2</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\01. Triangle.fx">
+      <Filter>Shaders\Week1</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\02. Quad.fx">
+      <Filter>Shaders\Week1</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\03. ConstBuffer.fx">
+      <Filter>Shaders\Week1</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\04. Texture.fx">
+      <Filter>Shaders\Week1</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\05. Sampler.fx">
+      <Filter>Shaders\Week1</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\06. Terrain.fx">
+      <Filter>Shaders\Week1</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\07. Normal.fx">
+      <Filter>Shaders\Week1</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\15. ModelDemo.fx">
+      <Filter>Shaders\Week3</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

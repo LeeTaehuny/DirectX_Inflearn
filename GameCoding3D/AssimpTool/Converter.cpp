@@ -3,6 +3,7 @@
 #include <filesystem>
 #include "Utils.h"
 #include "tinyxml2.h"
+#include "FileUtils.h"
 
 Converter::Converter()
 {
@@ -232,7 +233,43 @@ void Converter::ReadMaterialData()
 
 void Converter::WriteModelFile(wstring finalPath)
 {
-	
+	// 경로를 설정합니다.
+	auto path = filesystem::path(finalPath);
+
+	// 폴더를 생성합니다.
+	filesystem::create_directory(path.parent_path());
+
+	// 파일을 열어줍니다.
+	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	file->Open(finalPath, FileMode::Write);
+
+	// 실제 파일안에 데이터를 넣어줍니다.
+	// * Bone Data
+	file->Write<uint32>(_bones.size());
+	for (shared_ptr<asBone>& bone : _bones)
+	{
+		file->Write<int32>(bone->index);
+		file->Write<string>(bone->name);
+		file->Write<int32>(bone->parent);
+		file->Write<Matrix>(bone->transform);
+	}
+
+	// * Mesh Data
+	file->Write<uint32>(_meshes.size());
+	for (shared_ptr<asMesh>& meshData : _meshes)
+	{
+		file->Write<string>(meshData->name);
+		file->Write<int32>(meshData->boneIndex);
+		file->Write<string>(meshData->materialName);
+
+		// Vertex Data
+		file->Write<uint32>(meshData->vertices.size());
+		file->Write(&meshData->vertices[0], sizeof(VertexType) * meshData->vertices.size());
+
+		// Index Data
+		file->Write<uint32>(meshData->indices.size());
+		file->Write(&meshData->indices[0], sizeof(uint32) * meshData->indices.size());
+	}
 }
 
 void Converter::WriteMaterialData(wstring finalPath)
@@ -330,9 +367,9 @@ string Converter::WriteTexture(string saveFolder, string file)
 
 		if (srcTexture->mHeight == 0)
 		{
-			//shared_ptr<FileUtils> file = make_shared<FileUtils>();
-			//file->Open(Utils::ToWString(pathStr), FileMode::Write);
-			//file->Write(srcTexture->pcData, srcTexture->mWidth);
+			shared_ptr<FileUtils> file = make_shared<FileUtils>();
+			file->Open(Utils::ToWString(pathStr), FileMode::Write);
+			file->Write(srcTexture->pcData, srcTexture->mWidth);
 		}
 		else
 		{

@@ -2,8 +2,8 @@
 
 // 메모리에 들고 있는 데이터를 우리만의 데이터로 변경해주기 위한 구조체를 가지는 헤더입니다.
 
-// VertexType (VertexTextureNormalTangentData)
-using VertexType = VertexTextureNormalTangentData;
+// VertexType (VertexTextureNormalTangentBlendData)
+using VertexType = VertexTextureNormalTangentBlendData;
 
 // 우리가 사용하기 위한 구조체 생성
 struct asBone

@@ -32,6 +32,8 @@ void AssimpTool::Init()
 		converter->ExportModelData(L"Tower/Tower");
 
 		// CustomData - > Memory
+		// * 해당 작업은 Tool에서 진행하는 것이 아닙니다.
+		// * 실제 클라이언트에서 게임을 진행할 때 만든 포맷을 불러 사용하는 부분입니다.
 	}
 }
 
