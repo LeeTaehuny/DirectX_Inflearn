@@ -39,6 +39,13 @@ struct MaterialDesc
 	Color emissive = Color(0.f, 0.f, 0.f, 1.f);
 };
 
+// Bone과 관련된 정보를 버퍼에 넘겨주기 위한 정보 구조체를 선언합니다.
+#define MAX_BONE_TRANSFORMS 50
+struct BoneDesc
+{
+	Matrix transforms[MAX_BONE_TRANSFORMS];
+};
+
 class RenderManager
 {
 	DECLARE_SINGLE(RenderManager);
@@ -58,6 +65,9 @@ public:
 	// 빛 정보를 셰이더에 Push하기 위한 함수들을 선언합니다.
 	void PushLightData(const LightDesc& desc);
 	void PushMaterialData(const MaterialDesc& desc);
+
+	// Bone 정보를 셰이더에 Push하기 위한 함수들을 선언합니다.
+	void PushBoneData(const BoneDesc& desc);
 
 private:
 	// 셰이더마다 연결해줘야 하는 것들이 달라져야 합니다.
@@ -86,5 +96,11 @@ private:
 	MaterialDesc _materialDesc;
 	shared_ptr<ConstantBuffer<MaterialDesc>> _materialBuffer;
 	ComPtr<ID3DX11EffectConstantBuffer> _materialEffectBuffer;
+
+	// Bone와 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
+	BoneDesc _boneDesc;
+	shared_ptr<ConstantBuffer<BoneDesc>> _boneBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _boneEffectBuffer;
+
 };
 

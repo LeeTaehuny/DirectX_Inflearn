@@ -31,6 +31,13 @@ void RenderManager::Init(shared_ptr<Shader> shader)
 	_lightEffectBuffer = _shader->GetConstantBuffer("LightBuffer");
 	_materialEffectBuffer = _shader->GetConstantBuffer("MaterialBuffer");
 
+	// * Bone 버퍼를 생성합니다.
+	_boneBuffer = make_shared <ConstantBuffer<BoneDesc>>();
+	_boneBuffer->Create();
+
+	// * 셰이더에 저장된 상수 버퍼를 가져와 EffectBuffer에 저장합니다.
+	_boneEffectBuffer = _shader->GetConstantBuffer("BoneBuffer");
+
 }
 
 void RenderManager::Update()
@@ -76,4 +83,11 @@ void RenderManager::PushMaterialData(const MaterialDesc& desc)
 	_materialDesc = desc;
 	_materialBuffer->CopyData(_materialDesc);
 	_materialEffectBuffer->SetConstantBuffer(_materialBuffer->GetComPtr().Get());
+}
+
+void RenderManager::PushBoneData(const BoneDesc& desc)
+{
+	_boneDesc = desc;
+	_boneBuffer->CopyData(_boneDesc);
+	_boneEffectBuffer->SetConstantBuffer(_boneBuffer->GetComPtr().Get());
 }

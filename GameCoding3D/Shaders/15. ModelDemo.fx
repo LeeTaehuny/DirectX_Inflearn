@@ -1,11 +1,25 @@
 #include "00. Global.fx"
 #include "00. Light.fx"
 
+#define MAX_MODEL_TRANSFORMS 50
+
+// 모델의 뼈 정보들을 저장하기 위한 상수버퍼를 정의합니다.
+cbuffer BoneBuffer
+{
+	matrix BoneTransforms[MAX_MODEL_TRANSFORMS];
+};
+
+// 현재 렌더링하는 물체의 Bone Index를 관리하기 위한 전역 버퍼를 생성합니다.
+uint BoneIndex;
+
 // VS
 MeshOutput VS(VertexTextureNormalTangent input)
 {
 	MeshOutput output;
-	output.position = mul(input.position, W);
+
+	output.position = mul(input.position, BoneTransforms[BoneIndex]);
+
+	output.position = mul(output.position, W);
 	output.worldPosition = output.position.xyz;
 	output.position = mul(output.position, VP);
 	output.uv = input.uv;
