@@ -4,6 +4,7 @@
 
 #include "AssimpTool.h"
 #include "StaticMeshDemo.h"
+#include "ImGuiDemo.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -18,8 +19,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	desc.clearColor = Color(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//desc.app = make_shared<AssimpTool>();
-	desc.app = make_shared<StaticMeshDemo>();
-	//desc.app = make_shared<AssimpTool>();
+	//desc.app = make_shared<StaticMeshDemo>();
+	desc.app = make_shared<ImGuiDemo>();
 
 	GAME->Run(desc);
 
