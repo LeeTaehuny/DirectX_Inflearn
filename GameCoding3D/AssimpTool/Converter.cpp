@@ -48,6 +48,44 @@ void Converter::ExportModelData(wstring savePath)
 	// * 처음에는 RootNode, -1, -1로 시작합니다.
 	ReadModelData(_scene->mRootNode, -1, -1);
 
+	// Skin 정보를 읽어옵니다.
+	// * 기존에 VertexData에 추가했던 blendIndices(뼈대 번호[최대 4개]), blendWeights(비율[각각의 비율]) 정보
+	// * 즉, 스키닝을 할 때는 정점 자체에 연관있는 뼈대 정보를 같이 기록한다는 것이 중요합니다.
+	ReadSkinData();
+
+	// 결과물을 편하게 보기 위해 csv 파일로 만들어줍니다.
+	{
+		FILE* file;
+		::fopen_s(&file, "../Vertices.csv", "w");
+
+		for (shared_ptr<asBone>& bone : _bones)
+		{
+			string name = bone->name;
+			::fprintf(file, "%d,%s\n", bone->index, bone->name.c_str());
+		}
+
+		::fprintf(file, "\n");
+
+		for (shared_ptr<asMesh>& mesh : _meshes)
+		{
+			string name = mesh->name;
+			::printf("%s\n", name.c_str());
+
+			for (UINT i = 0; i < mesh->vertices.size(); i++)
+			{
+				Vec3 p = mesh->vertices[i].position;
+				Vec4 indices = mesh->vertices[i].blendIndices;
+				Vec4 weights = mesh->vertices[i].blendWeights;
+
+				::fprintf(file, "%f,%f,%f,", p.x, p.y, p.z);
+				::fprintf(file, "%f,%f,%f,%f,", indices.x, indices.y, indices.z, indices.w);
+				::fprintf(file, "%f,%f,%f,%f\n", weights.x, weights.y, weights.z, weights.w);
+			}
+		}
+
+		::fclose(file);
+	}
+
 	// 최종적으로 읽어온 Model을 finalPath에 저장합니다.
 	WriteModelFile(finalPath);
 }
@@ -350,6 +388,73 @@ void Converter::WriteMaterialData(wstring finalPath)
 		// 최종 경로에 파일을 저장합니다.
 		document->SaveFile(Utils::ToString(finalPath).c_str());
 	}
+}
+
+void Converter::ReadSkinData()
+{
+	// 메쉬를 순회합니다.
+	for (uint32 i = 0; i < _scene->mNumMeshes; i++)
+	{
+		// 인덱스에 맞는 원본 메시를 가져옵니다.
+		aiMesh* srcMesh = _scene->mMeshes[i];
+		// 만약 원본 메시의 뼈가 존재하지 않는다면? -> 스킨 데이터가 없는 경우이므로 해당 메시를 건너뜁니다.
+		if (srcMesh->HasBones() == false) continue;
+
+		// 우리만의 타입으로 메시를 가져옵니다.
+		shared_ptr<asMesh> mesh = _meshes[i];
+
+		// 정점마다 가지고 있는 BoneWeight를 저장하기 위한 임시 벡터를 선언합니다.
+		vector<asBoneWeights> tempVertexBoneWeights;
+		// 해당 메시의 bone 수만큼 초기화합니다.
+		tempVertexBoneWeights.resize(mesh->vertices.size());
+
+		// 해당 메쉬의 Bone을 하나씩 순회하며 연관된 Vertex_ID(뼈), Weight(가중치)를 구해서 저장합니다.
+		for (uint32 b = 0; b < srcMesh->mNumBones; b++)
+		{
+			// 인덱스에 맞는 원본 Bone을 가져옵니다.
+			aiBone* srcMeshBone = srcMesh->mBones[b];
+			// 위에서 가져온 Bone이 몇 번째 Bone인지를 구해줍니다.
+			uint32 boneIndex = GetBoneIndex(srcMeshBone->mName.C_Str());
+
+			// 해당 Bone에 들어있는 가중치 정보들을 순회합니다.
+			for (uint32 w = 0; w < srcMeshBone->mNumWeights; w++)
+			{
+				// 몇 번째 뼈에 영향을 받고(vertexId) 비율은 얼마인지(weight)를 추출합니다.
+				uint32 index = srcMeshBone->mWeights[w].mVertexId;
+				float weight = srcMeshBone->mWeights[w].mWeight;
+
+				// 인덱스에 맞는 정점의 BoneWeight에 정보를 추가합니다.
+				tempVertexBoneWeights[index].AddWeights(boneIndex, weight);
+			}
+		}
+
+		// 최종 결과 계산
+		// * 정점마다 저장된 BoneWeight를 순회하며 비율을 맞추고 해당 정점에 저장합니다.
+		for (uint32 v = 0; v < tempVertexBoneWeights.size(); v++)
+		{
+			tempVertexBoneWeights[v].Normalize();
+			asBlendWeight blendWeight = tempVertexBoneWeights[v].GetBlendWeights();
+
+			mesh->vertices[v].blendIndices = blendWeight.indices;
+			mesh->vertices[v].blendWeights = blendWeight.weights;
+		}
+		
+	}
+}
+
+uint32 Converter::GetBoneIndex(const string& name)
+{
+	// 모든 bone 정보를 순회하며 일치하는 이름이 존재하면 해당 인덱스를 반환합니다.
+	for (shared_ptr<asBone>& bone : _bones)
+	{
+		if (bone->name == name)
+		{
+			return bone->index;
+		}
+	}
+
+	assert(false);
+	return 0;
 }
 
 string Converter::WriteTexture(string saveFolder, string file)

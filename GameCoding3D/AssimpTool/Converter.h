@@ -36,6 +36,14 @@ private:
 	void WriteMaterialData(wstring finalPath);
 
 private:
+	// 읽어온 정보 중 Skin과 관련된 정보를 읽어오기 위한 함수를 선언합니다.
+	void ReadSkinData();
+
+private:
+	// 이름을 전달받아 몇 번째 Bone인지 인덱스를 반환하기 위한 함수를 선언합니다.
+	uint32 GetBoneIndex(const string& name);
+
+private:
 	// 필요한 것을 로드하기 위한 상대 경로들을 저장합니다.
 	// * 애셋
 	wstring _assetPath = L"../Resources/Assets/";
