@@ -2,6 +2,7 @@
 
 struct ModelBone;
 struct ModelMesh;
+struct ModelAnimation;
 
 // ModelMesh에서 생성한 구조체들을 최종적으로 사용하기 위한 클래스입니다.
 // * this 포인터를 사용하기 위해 enable_shared_from_this<Model>를 상속받아줍니다.
@@ -15,6 +16,7 @@ public:
 	// 우리만의 포맷으로 저장한 정보들을 불러오기 위한 함수를 선언합니다.
 	void ReadMaterial(wstring filename);
 	void ReadModel(wstring filename);
+	void ReadAnimation(wstring filename);
 
 public:
 	uint32 GetMaterialCount() { return static_cast<uint32>(_materials.size()); }
@@ -31,6 +33,11 @@ public:
 	vector<shared_ptr<ModelBone>>& GetBones() { return _bones; }
 	shared_ptr<ModelBone> GetBoneByIndex(uint32 index) { return (index < 0 || index >= _bones.size() ? nullptr : _bones[index]); }
 	shared_ptr<ModelBone> GetBoneByName(const wstring& name);
+
+	uint32 GetAnimationCount() { return _animations.size(); }
+	vector<shared_ptr<ModelAnimation>>& GetAnimations() { return _animations; }
+	shared_ptr<ModelAnimation> GetAnimationByIndex(UINT index) { return (index < 0 || index >= _animations.size()) ? nullptr : _animations[index]; }
+	shared_ptr<ModelAnimation> GetAnimationByName(wstring name);
 
 private:
 	// 생성한 머터리얼과 모델들에 대해 
@@ -51,6 +58,7 @@ private:
 	vector<shared_ptr<ModelBone>> _bones;
 	// * mesh들의 정보
 	vector<shared_ptr<ModelMesh>> _meshes;
-
+	// * animation들의 정보
+	vector<shared_ptr<ModelAnimation>> _animations;
 };
 
