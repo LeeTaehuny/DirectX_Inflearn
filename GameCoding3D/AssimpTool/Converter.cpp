@@ -102,6 +102,19 @@ void Converter::ExportMaterialData(wstring savePath)
 	WriteMaterialData(finalPath);
 }
 
+void Converter::ExportAnimationData(wstring savePath, uint32 index)
+{
+	// 최종 경로를 설정합니다.
+	wstring finalPath = _modelPath + savePath + L".clip";
+	assert(index < _scene->mNumAnimations);
+
+	// 애니메이션 데이터를 읽어옵니다.
+	shared_ptr<asAnimation> animation = ReadAnimationData(_scene->mAnimations[index]);
+
+	// 읽어온 애니메이션 데이터를 우리만의 파일로 저장합니다.
+	WriteAnimationData(animation, finalPath);
+}
+
 void Converter::ReadModelData(aiNode* node, int32 index, int32 parent)
 {
 	// Bone 정보를 저장하기 위한 변수를 선언합니다.
@@ -390,6 +403,181 @@ void Converter::WriteMaterialData(wstring finalPath)
 	}
 }
 
+shared_ptr<asAnimation> Converter::ReadAnimationData(aiAnimation* srcAnimation)
+{
+	// 실제로 애니메이션 데이터를 저장하기 위한 변수를 선언합니다.
+	shared_ptr<asAnimation> animation = make_shared<asAnimation>();
+	// 원본으로부터 값을 복사합니다.
+	animation->name = srcAnimation->mName.C_Str();
+	animation->frameCount = (uint32)srcAnimation->mDuration + 1;
+	animation->frameRate = (float)srcAnimation->mTicksPerSecond;
+
+	// cache animation Node
+	map<string, shared_ptr<asAnimationNode>> cacheAnimNodes;
+
+	// 원본의 애니메이션 채널을 순회합니다.
+	for (uint32 i = 0; i < srcAnimation->mNumChannels; i++)
+	{
+		// 인덱스에 해당하는 채널(노드)을 가져옵니다.
+		aiNodeAnim* srcNode = srcAnimation->mChannels[i];
+
+		// 애니메이션 노드 데이터 파싱
+		shared_ptr<asAnimationNode> node = ParseAnimationNode(animation, srcNode);
+
+		// 현재 찾은 노드 중에서 가장 긴 노드를 기준으로 애니메이션 시간을 갱신합니다.
+		animation->duration = max(animation->duration, node->keyframe.back().time);
+
+		// 파싱한 노드를 임시로 저장합니다.
+		cacheAnimNodes[srcNode->mNodeName.C_Str()] = node;
+	}
+	// 해당 애니메이션과 캐싱한 애니메이션 노드를 채워줍니다.
+	// * 노드는 계층구조로 이뤄져 있으므로, 루트노드부터 호출해 재귀적으로 처리하는 함수를 사용합니다.
+	ReadKeyframeData(animation, _scene->mRootNode, cacheAnimNodes);
+
+	return animation;
+
+}
+
+shared_ptr<asAnimationNode> Converter::ParseAnimationNode(shared_ptr<asAnimation> animation, aiNodeAnim* srcNode)
+{
+	shared_ptr<asAnimationNode> node = make_shared<asAnimationNode>();
+	// 이름 추출
+	node->name = srcNode->mNodeName;
+
+	// SRT 추출
+	// * SRT 중 가장 큰 키 카운트를 구해줍니다.
+	uint32 keyCount = (max(srcNode->mNumPositionKeys, srcNode->mNumScalingKeys), srcNode->mNumRotationKeys);
+	// * 키를 순회하며 키 프레임 데이터를 채워줍니다.
+	for (int k = 0; k < keyCount; k++)
+	{
+		asKeyframeData frameData;
+
+		// 데이터 추가
+		// * 데이터가 있는지 판별하기 위한 변수
+		bool found = false;
+
+		uint32 t = node->keyframe.size();
+
+		// * Position
+		if (::fabsf((float)srcNode->mPositionKeys[k].mTime - (float)t) <= 0.0001f)
+		{
+			aiVectorKey key = srcNode->mPositionKeys[k];
+			frameData.time = (float)key.mTime;
+			::memcpy_s(&frameData.translation, sizeof(Vec3), &key.mValue, sizeof(aiVector3D));
+
+			found = true;
+		}
+
+		// * Rotation
+		if (::fabsf((float)srcNode->mRotationKeys[k].mTime - (float)t) <= 0.0001f)
+		{
+			aiQuatKey key = srcNode->mRotationKeys[k];
+			frameData.time = (float)key.mTime;
+
+			frameData.rotation.x = key.mValue.x;
+			frameData.rotation.y = key.mValue.y;
+			frameData.rotation.z = key.mValue.z;
+			frameData.rotation.w = key.mValue.w;
+
+			found = true;
+		}
+
+		// * Scale
+		if (::fabsf((float)srcNode->mScalingKeys[k].mTime - (float)t) <= 0.0001f)
+		{
+			aiVectorKey key = srcNode->mScalingKeys[k];
+			frameData.time = (float)key.mTime;
+			::memcpy_s(&frameData.scale, sizeof(Vec3), &key.mValue, sizeof(aiVector3D));
+
+			found = true;
+		}
+
+		if (found == true)
+			node->keyframe.push_back(frameData);
+	}
+
+	// Keyframe 늘려주기
+	if (node->keyframe.size() < animation->frameCount)
+	{
+		uint32 count = animation->frameCount - node->keyframe.size();
+		asKeyframeData keyFrame = node->keyframe.back();
+
+		for (uint32 n = 0; n < count; n++)
+			node->keyframe.push_back(keyFrame);
+	}
+
+	return node;
+}
+
+void Converter::ReadKeyframeData(shared_ptr<asAnimation> animation, aiNode* srcNode, map<string, shared_ptr<asAnimationNode>>& cache)
+{
+	// 하나의 프레임에 들어가는 뼈의 이름과 뼈의 transform 정보를 저장하기 위한 변수를 선언합니다.
+	shared_ptr<asKeyframe> keyframe = make_shared<asKeyframe>();
+	// 뼈 이름을 저장합니다.
+	keyframe->boneName = srcNode->mName.C_Str();
+
+	// 뼈 이름에 해당하는 노드를 찾습니다.
+	shared_ptr<asAnimationNode> findNode = cache[srcNode->mName.C_Str()];
+
+	// 애니메이션의 프레임 수만큼 반복합니다.
+	for (uint32 i = 0; i < animation->frameCount; i++)
+	{
+		// 하나의 프레임에 들어가는 데이터를 저장하기 위한 변수를 선언합니다.
+		asKeyframeData frameData;
+
+		if (findNode == nullptr)
+		{
+			// 노드를 못 찾은 경우 원본 파일의 transform 정보로 설정합니다.
+			Matrix transform(srcNode->mTransformation[0]);
+			transform = transform.Transpose();
+			frameData.time = (float)i;
+			transform.Decompose(OUT frameData.scale, OUT frameData.rotation, OUT frameData.translation);
+		}
+		else
+		{
+			// 노드를 찾은 경우 캐시에 저장되어 있는 노드의 값을 그대로 설정합니다.
+			frameData = findNode->keyframe[i];
+		}
+
+		// 해당 프레임의 프레임 데이터를 추가합니다.
+		keyframe->transforms.push_back(frameData);
+	}
+
+	// 모든 프레임의 프레임 데이터가 추가되었습니다. (keyframe)
+	// * 애니메이션의 프레임 정보에 추가해줍니다.
+	animation->keyframes.push_back(keyframe);
+	
+	// 노드의 자식 노드를 순회하며 같은 처리를 해줍니다. (자식 노드(뼈)들도 프레임 데이터를 추가하고, 프레임 정보에 넣어주기)
+	for (uint32 i = 0; i < srcNode->mNumChildren; i++)
+		ReadKeyframeData(animation, srcNode->mChildren[i], cache);
+}
+
+void Converter::WriteAnimationData(shared_ptr<asAnimation> animation, wstring finalPath)
+{
+	auto path = filesystem::path(finalPath);
+
+	// 폴더를 생성합니다. (없는 경우에 생성)
+	filesystem::create_directory(path.parent_path());
+
+	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	file->Open(finalPath, FileMode::Write);
+
+	file->Write<string>(animation->name);
+	file->Write<float>(animation->duration);
+	file->Write<float>(animation->frameRate);
+	file->Write<uint32>(animation->frameCount);
+
+	file->Write<uint32>(animation->keyframes.size());
+
+	for (shared_ptr<asKeyframe> keyframe : animation->keyframes)
+	{
+		file->Write<string>(keyframe->boneName);
+
+		file->Write<uint32>(keyframe->transforms.size());
+		file->Write(&keyframe->transforms[0], sizeof(asKeyframeData) * keyframe->transforms.size());
+	}
+}
+
 void Converter::ReadSkinData()
 {
 	// 메쉬를 순회합니다.
@@ -468,7 +656,7 @@ string Converter::WriteTexture(string saveFolder, string file)
 	const aiTexture* srcTexture = _scene->GetEmbeddedTexture(file.c_str());
 	if (srcTexture)
 	{
-		string pathStr = saveFolder + fileName;
+		string pathStr = (filesystem::path(saveFolder) / fileName).string();
 
 		if (srcTexture->mHeight == 0)
 		{

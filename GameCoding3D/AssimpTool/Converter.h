@@ -16,8 +16,9 @@ public:
 	void ExportModelData(wstring savePath);
 	// _scene에 저장된 정보를 가져와 별도의 Material파일로 만들어주기 위한 함수를 선언합니다.
 	void ExportMaterialData(wstring savePath);
+	// _scene에 저장된 정보를 가져와 애니메이션 데이터를 추출하기 위한 함수를 선언합니다.
+	void ExportAnimationData(wstring savePath, uint32 index = 0);
 
-	
 private:
 	// 읽어온 정보 중 Model을 읽어오기 위한 함수를 선언합니다.
 	void ReadModelData(aiNode* node, int32 index, int32 parent);
@@ -36,10 +37,18 @@ private:
 	void WriteMaterialData(wstring finalPath);
 
 private:
-	// 읽어온 정보 중 Skin과 관련된 정보를 읽어오기 위한 함수를 선언합니다.
-	void ReadSkinData();
+	// 읽어온 정보 중 애니메이션 데이터를 우리만의 자료형으로 변환시키기 위한 함수를 선언합니다.
+	shared_ptr<asAnimation> ReadAnimationData(aiAnimation* srcAnimation);
+	// 애니메이션 노드를 파싱하기 위한 함수를 선언합니다.
+	shared_ptr<asAnimationNode> ParseAnimationNode(shared_ptr<asAnimation> animation, aiNodeAnim* srcNode);
+	// 키 프레임 데이터를 읽어오기 위한 함수를 선언합니다.
+	void ReadKeyframeData(shared_ptr<asAnimation> animation, aiNode* srcNode, map<string, shared_ptr<asAnimationNode>>& cache);
+	// 읽어온 키 프레임 데이터를 저장하기 위한 함수를 선언합니다.
+	void WriteAnimationData(shared_ptr<asAnimation> animation, wstring finalPath);
 
 private:
+	// 읽어온 정보 중 Skin과 관련된 정보를 읽어오기 위한 함수를 선언합니다.
+	void ReadSkinData();
 	// 이름을 전달받아 몇 번째 Bone인지 인덱스를 반환하기 위한 함수를 선언합니다.
 	uint32 GetBoneIndex(const string& name);
 

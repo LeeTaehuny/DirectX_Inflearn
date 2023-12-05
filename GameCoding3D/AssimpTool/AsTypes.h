@@ -126,3 +126,52 @@ struct asBoneWeights
 	using Pair = pair<int32, float>;
 	vector<Pair> boneWeights;
 };
+
+// 키 프레임 데이터를 저장하기 위한 구조체를 생성합니다.
+struct asKeyframeData
+{
+	// 시간
+	float time;
+	
+	// SRT
+	Vec3 scale;
+	Quaternion rotation;
+	Vec3 translation;
+};
+
+// 하나의 프레임을 저장하기 위한 구조체를 생성합니다.
+struct asKeyframe
+{
+	// Bone 이름
+	string boneName;
+	
+	// 변환 행렬
+	vector<asKeyframeData> transforms;
+};
+
+// 하나의 애니메이션을 저장하기 위한 구조체를 생성합니다.
+struct asAnimation
+{
+	// 이름
+	string name;
+	// 프레임 수
+	uint32 frameCount;
+	// 프레임 재생율 (ex. 30 -> 1 / 30초마다 다음 프레임으로 넘기기)
+	float frameRate;
+	// 재생 시간
+	float duration;
+
+	// 재생할 프레임
+	vector<shared_ptr<asKeyframe>> keyframes;
+};
+
+// 애니메이션 : 프레임마다 모든 뼈(bone)가 어떻게 변화(transform)하는지에 대한 정보를 가지고 있습니다.
+// -> 즉, 1프레임을 재생 중이라면 모든 bone들을 각각의 finalMatrix(transform 적용)을 적용시켜 변화시켜줍니다.
+// -> 스키닝 기법을 사용했으므로 해당 bone들과 연결된 Vertex 또한 매 프레임 변화합니다.
+
+// Cache
+struct asAnimationNode
+{
+	aiString name;
+	vector<asKeyframeData> keyframe;
+};
