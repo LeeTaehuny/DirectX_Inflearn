@@ -44,6 +44,9 @@ private:
 	// 실제 GPU에 넘겨주기 위한 SRV를 저장하기 위한 변수를 선언합니다.
 	ComPtr<ID3D11ShaderResourceView> _srv;
 
+	// 키 프레임 정보를 저장하기 위한 변수를 선언합니다.
+	KeyframeDesc _keyframeDesc;
+
 private:
 	shared_ptr<Shader>	_shader;
 	uint8				_pass = 0;

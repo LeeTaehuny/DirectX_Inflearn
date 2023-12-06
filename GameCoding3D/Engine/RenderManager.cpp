@@ -38,6 +38,11 @@ void RenderManager::Init(shared_ptr<Shader> shader)
 	// * 셰이더에 저장된 상수 버퍼를 가져와 EffectBuffer에 저장합니다.
 	_boneEffectBuffer = _shader->GetConstantBuffer("BoneBuffer");
 
+	// * Keyframe 버퍼를 생성합니다.
+	_keyframeBuffer = make_shared<ConstantBuffer<KeyframeDesc>>();
+	_keyframeBuffer->Create();
+	// * 셰이더에 저장된 상수 버퍼를 가져와 EffectBuffer에 저장합니다.
+	_keyframeEffectBuffer = _shader->GetConstantBuffer("KeyframeBuffer");
 }
 
 void RenderManager::Update()
@@ -90,4 +95,11 @@ void RenderManager::PushBoneData(const BoneDesc& desc)
 	_boneDesc = desc;
 	_boneBuffer->CopyData(_boneDesc);
 	_boneEffectBuffer->SetConstantBuffer(_boneBuffer->GetComPtr().Get());
+}
+
+void RenderManager::PushKeyframeData(const KeyframeDesc& desc)
+{
+	_keyframeDesc = desc;
+	_keyframeBuffer->CopyData(_keyframeDesc);
+	_keyframeEffectBuffer->SetConstantBuffer(_keyframeBuffer->GetComPtr().Get());
 }

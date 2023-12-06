@@ -48,6 +48,26 @@ struct BoneDesc
 	Matrix transforms[MAX_MODEL_TRANSFORMS];
 };
 
+// Animation과 관련된 정보를 버퍼에 넘겨주기 위한 정보 구조체를 선언합니다.
+struct KeyframeDesc
+{
+	// 현재 실행중인 애니메이션 번호
+	uint32 animIndex = 0;
+	// 현재 프레임 카운트
+	uint32 currFrame = 0;
+
+	// TODO
+	// 다음 프레임 카운트
+	uint32 nextFrame = 0;
+	
+	float ratio = 0.0f;
+	float sumTime = 0.0f;
+	float speed = 1.0f;
+
+	// padding
+	Vec2 padding;
+};
+
 class RenderManager
 {
 	DECLARE_SINGLE(RenderManager);
@@ -68,8 +88,11 @@ public:
 	void PushLightData(const LightDesc& desc);
 	void PushMaterialData(const MaterialDesc& desc);
 
-	// Bone 정보를 셰이더에 Push하기 위한 함수들을 선언합니다.
+	// Bone 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
 	void PushBoneData(const BoneDesc& desc);
+
+	// Keyframe 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushKeyframeData(const KeyframeDesc& desc);
 
 private:
 	// 셰이더마다 연결해줘야 하는 것들이 달라져야 합니다.
@@ -104,5 +127,9 @@ private:
 	shared_ptr<ConstantBuffer<BoneDesc>> _boneBuffer;
 	ComPtr<ID3DX11EffectConstantBuffer> _boneEffectBuffer;
 
+	// Keyframe과 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
+	KeyframeDesc _keyframeDesc;
+	shared_ptr<ConstantBuffer<KeyframeDesc>> _keyframeBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _keyframeEffectBuffer;
 };
 
