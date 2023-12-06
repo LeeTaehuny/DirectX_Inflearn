@@ -13,7 +13,7 @@ cbuffer BoneBuffer
 uint BoneIndex;
 
 // VS
-MeshOutput VS(VertexTextureNormalTangent/*Blend*/ input)
+MeshOutput VS(VertexTextureNormalTangentBlend input)
 {
 	MeshOutput output;
 

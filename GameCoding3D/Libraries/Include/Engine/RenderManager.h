@@ -41,6 +41,8 @@ struct MaterialDesc
 
 // Bone과 관련된 정보를 버퍼에 넘겨주기 위한 정보 구조체를 선언합니다.
 #define MAX_MODEL_TRANSFORMS 250
+#define MAX_MODEL_KEYFRAMES 500
+
 struct BoneDesc
 {
 	Matrix transforms[MAX_MODEL_TRANSFORMS];
