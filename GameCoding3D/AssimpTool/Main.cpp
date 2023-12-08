@@ -5,6 +5,7 @@
 #include "AssimpTool.h"
 #include "AnimationDemo.h"
 #include "ImGuiDemo.h"
+#include "TweenDemo.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -19,8 +20,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	desc.clearColor = Color(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//desc.app = make_shared<AssimpTool>();
-	desc.app = make_shared<AnimationDemo>();
+	//desc.app = make_shared<AnimationDemo>();
 	//desc.app = make_shared<ImGuiDemo>();
+	desc.app = make_shared<TweenDemo>();
 
 	GAME->Run(desc);
 

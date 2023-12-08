@@ -52,11 +52,10 @@ struct BoneDesc
 struct KeyframeDesc
 {
 	// 현재 실행중인 애니메이션 번호
-	uint32 animIndex = 0;
+	int32 animIndex = -1;
 	// 현재 프레임 카운트
 	uint32 currFrame = 0;
 
-	// TODO
 	// 다음 프레임 카운트
 	uint32 nextFrame = 0;
 	
@@ -66,6 +65,33 @@ struct KeyframeDesc
 
 	// padding
 	Vec2 padding;
+};
+
+// Animation과 관련된 정보를 버퍼에 넘겨주기 위한 정보 구조체를 선언합니다. (Tween)
+struct TweenDesc
+{
+	TweenDesc()
+	{
+		curr.animIndex = 0;
+		next.animIndex = -1;
+	}
+
+	void ClearNextAnim()
+	{
+		next.animIndex = -1;
+		next.currFrame = 0;
+		next.nextFrame = 0;
+		next.sumTime = 0;
+		tweenSumTime = 0;
+		tweenRatio = 0;
+	}
+
+	float tweenDuration = 1.0f;
+	float tweenRatio = 0.f;
+	float tweenSumTime = 0.f;
+	float padding = 0.f;
+	KeyframeDesc curr;
+	KeyframeDesc next;
 };
 
 class RenderManager
@@ -93,6 +119,9 @@ public:
 
 	// Keyframe 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
 	void PushKeyframeData(const KeyframeDesc& desc);
+
+	// Tween 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushTweenData(const TweenDesc& desc);
 
 private:
 	// 셰이더마다 연결해줘야 하는 것들이 달라져야 합니다.
@@ -131,5 +160,11 @@ private:
 	KeyframeDesc _keyframeDesc;
 	shared_ptr<ConstantBuffer<KeyframeDesc>> _keyframeBuffer;
 	ComPtr<ID3DX11EffectConstantBuffer> _keyframeEffectBuffer;
+
+	// Tween 애니메이션 재생과 관련된 정보 또한 설정 가능하도록 변수럴 선언해줍니다.
+	TweenDesc _tweenDesc;
+	shared_ptr<ConstantBuffer<TweenDesc>> _tweenBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _tweenEffectBuffer;
+
 };
 

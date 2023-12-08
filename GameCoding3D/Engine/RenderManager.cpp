@@ -43,6 +43,12 @@ void RenderManager::Init(shared_ptr<Shader> shader)
 	_keyframeBuffer->Create();
 	// * 셰이더에 저장된 상수 버퍼를 가져와 EffectBuffer에 저장합니다.
 	_keyframeEffectBuffer = _shader->GetConstantBuffer("KeyframeBuffer");
+
+	// * Tween 버퍼를 생성합니다.
+	_tweenBuffer = make_shared<ConstantBuffer<TweenDesc>>();
+	_tweenBuffer->Create();
+	// * 셰이더에 저장된 상수 버퍼를 가져와 EffectBuffer에 저장합니다.
+	_tweenEffectBuffer = _shader->GetConstantBuffer("TweenBuffer");
 }
 
 void RenderManager::Update()
@@ -102,4 +108,11 @@ void RenderManager::PushKeyframeData(const KeyframeDesc& desc)
 	_keyframeDesc = desc;
 	_keyframeBuffer->CopyData(_keyframeDesc);
 	_keyframeEffectBuffer->SetConstantBuffer(_keyframeBuffer->GetComPtr().Get());
+}
+
+void RenderManager::PushTweenData(const TweenDesc& desc)
+{
+	_tweenDesc = desc;
+	_tweenBuffer->CopyData(_tweenDesc);
+	_tweenEffectBuffer->SetConstantBuffer(_tweenBuffer->GetComPtr().Get());
 }

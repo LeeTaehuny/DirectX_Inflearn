@@ -46,6 +46,8 @@ private:
 
 	// 키 프레임 정보를 저장하기 위한 변수를 선언합니다.
 	KeyframeDesc _keyframeDesc;
+	// 두 개의 키 프레임 정보를 저장하기 위한 변수를 선언합니다.
+	TweenDesc _tweenDesc;
 
 private:
 	shared_ptr<Shader>	_shader;
