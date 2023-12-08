@@ -6,6 +6,7 @@
 #include "AnimationDemo.h"
 #include "ImGuiDemo.h"
 #include "TweenDemo.h"
+#include "SkyDemo.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -22,7 +23,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//desc.app = make_shared<AssimpTool>();
 	//desc.app = make_shared<AnimationDemo>();
 	//desc.app = make_shared<ImGuiDemo>();
-	desc.app = make_shared<TweenDemo>();
+	//desc.app = make_shared<TweenDemo>();
+	desc.app = make_shared<SkyDemo>();
 
 	GAME->Run(desc);
 
