@@ -12,21 +12,19 @@ public:
 	MeshRenderer();
 	virtual ~MeshRenderer();
 
-	virtual void Update() override;
-
 	void SetMesh(shared_ptr<Mesh> mesh) { _mesh = mesh; }
 	void SetMaterial(shared_ptr<Material> material) { _material = material; }
+	void SetPass(uint8 pass) { _pass = pass; }
 
-	// Legacy
-	void SetTexture(shared_ptr<Texture> texture) { }
-	void SetShader(shared_ptr<Shader> shader) { }
+	void RenderInstancing(shared_ptr<class InstancingBuffer>& buffer);
+
+	// 인스턴스의 ID를 반환하기 위한 함수를 선언합니다.
+	InstanceID GetInstanceID();
 
 private:
 	shared_ptr<Mesh> _mesh;
 	shared_ptr<Material> _material;
 
-	// * Material 내부로 이동
-	//shared_ptr<Texture> _texture;
-	//shared_ptr<Shader> _shader;
+	uint8 _pass = 0;
 };
 

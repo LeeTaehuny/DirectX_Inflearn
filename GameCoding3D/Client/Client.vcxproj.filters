@@ -13,9 +13,6 @@
     <Filter Include="Main\Camera">
       <UniqueIdentifier>{9dbc6584-13e1-4551-b2e9-dbeccc359878}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Week2">
-      <UniqueIdentifier>{ce10ad8f-ec54-425a-a741-1ebcc5aabaa6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Week2">
       <UniqueIdentifier>{60d4ee3b-d693-4666-a5d5-e437a54a62fc}</UniqueIdentifier>
     </Filter>
@@ -39,34 +36,10 @@
     <ClCompile Include="CameraScript.cpp">
       <Filter>Main\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="10. GlobalTestDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="11. DepthStencilDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="12. AmbientDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="13. DiffuseDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="14. SpecularDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="15. EmissiveDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="16. LightingDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="17. MaterialDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
-    <ClCompile Include="18. NormalMappingDemo.cpp">
-      <Filter>Game\Week2</Filter>
-    </ClCompile>
     <ClCompile Include="InstancingDemo.cpp">
+      <Filter>Game\Week3</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshInstancingDemo.cpp">
       <Filter>Game\Week3</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,34 +53,10 @@
     <ClInclude Include="CameraScript.h">
       <Filter>Main\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="10. GlobalTestDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="11. DepthStencilDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="12. AmbientDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="13. DiffuseDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="14. SpecularDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="15. EmissiveDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="16. LightingDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="17. MaterialDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
-    <ClInclude Include="18. NormalMappingDemo.h">
-      <Filter>Game\Week2</Filter>
-    </ClInclude>
     <ClInclude Include="InstancingDemo.h">
+      <Filter>Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshInstancingDemo.h">
       <Filter>Game\Week3</Filter>
     </ClInclude>
   </ItemGroup>
@@ -152,6 +101,9 @@
       <Filter>Shaders\Week3</Filter>
     </FxCompile>
     <FxCompile Include="..\Shaders\19. InstancingDemo.fx">
+      <Filter>Shaders\Week3</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\20. MeshInstancingDemo.fx">
       <Filter>Shaders\Week3</Filter>
     </FxCompile>
   </ItemGroup>
