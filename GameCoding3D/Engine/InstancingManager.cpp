@@ -8,7 +8,8 @@ void InstancingManager::Render(vector<shared_ptr<GameObject>>& gameObjects)
 	ClearData();
 
 	// 새로운 데이터를 출력합니다.
-	RenderMeshRender(gameObjects);
+	RenderMeshRenderer(gameObjects);
+	RenderModelRenderer(gameObjects);
 }
 
 void InstancingManager::ClearData()
@@ -20,7 +21,7 @@ void InstancingManager::ClearData()
 	}
 }
 
-void InstancingManager::RenderMeshRender(vector<shared_ptr<GameObject>> gameObjects)
+void InstancingManager::RenderMeshRenderer(vector<shared_ptr<GameObject>> gameObjects)
 {
 	map<InstanceID, vector<shared_ptr<GameObject>>> cache;
 
@@ -64,6 +65,53 @@ void InstancingManager::RenderMeshRender(vector<shared_ptr<GameObject>> gameObje
 		// * 실제로 화면에 그려줍니다. (그려주는 것은 한 번만 실행하도록 합니다.)
 		shared_ptr<InstancingBuffer>& buffer = _buffers[instanceId];
 		vec[0]->GetMeshRenderer()->RenderInstancing(buffer);
+	}
+}
+
+void InstancingManager::RenderModelRenderer(vector<shared_ptr<GameObject>> gameObjects)
+{
+	map<InstanceID, vector<shared_ptr<GameObject>>> cache;
+
+	// 매 프레임 ModelRenderer 컴포넌트를 가지고 있는 오브젝트들을 찾습니다. (분류 단계)
+	for (shared_ptr<GameObject>& gameObject : gameObjects)
+	{
+		// MeshRenderer 컴포넌트가 존재하지 않으면 건너뛰기
+		if (gameObject->GetModelRenderer() == nullptr)
+		{
+			continue;
+		}
+
+		// MeshRenderer의 InstanceID를 가져와 해당 아이디 키에 오브젝트를 저장합니다.
+		const InstanceID instanceId = gameObject->GetModelRenderer()->GetInstanceID();
+		cache[instanceId].push_back(gameObject);
+	}
+
+	// 위 분류 작업을 통해 인스턴스 ID가 같은 물체들끼리 정리되었습니다.
+	// * 순회하며 렌더링해주도록 합니다.
+	for (auto& pair : cache)
+	{
+		const vector<shared_ptr<GameObject>>& vec = pair.second;
+
+		// 인스턴스 아이디를 가져옵니다.
+		const InstanceID instanceId = pair.first;
+
+		// 모든 데이터들을 순회하며 값을 저장합니다.
+		for (int32 i = 0; i < vec.size(); i++)
+		{
+			const shared_ptr<GameObject>& gameObject = vec[i];
+			InstancingData data;
+
+			// 월드 변환 행렬을 넣어줍니다.
+			data.world = gameObject->GetTransform()->GetWorldMatrix();
+
+			// 버퍼에 데이터를 추가합니다.
+			AddData(instanceId, data);
+		}
+
+		// 모든 데이터를 저장했습니다.
+		// * 실제로 화면에 그려줍니다. (그려주는 것은 한 번만 실행하도록 합니다.)
+		shared_ptr<InstancingBuffer>& buffer = _buffers[instanceId];
+		vec[0]->GetModelRenderer()->RenderInstancing(buffer);
 	}
 }
 

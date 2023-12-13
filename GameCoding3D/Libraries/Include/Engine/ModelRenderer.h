@@ -19,6 +19,11 @@ public:
 	void SetModel(shared_ptr<Model> model);
 	// Pass 정보를 설정하기 위한 함수를 정의합니다.
 	void SetPass(uint8 pass) { _pass = pass; }
+
+	void RenderInstancing(shared_ptr<class InstancingBuffer>& buffer);
+
+	// 인스턴스의 ID를 반환하기 위한 함수를 선언합니다.
+	InstanceID GetInstanceID();
 	
 private:
 	shared_ptr<Shader>	_shader;
