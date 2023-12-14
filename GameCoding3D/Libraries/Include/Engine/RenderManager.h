@@ -42,6 +42,7 @@ struct MaterialDesc
 // Bone과 관련된 정보를 버퍼에 넘겨주기 위한 정보 구조체를 선언합니다.
 #define MAX_MODEL_TRANSFORMS 250
 #define MAX_MODEL_KEYFRAMES 500
+#define MAX_MODEL_INSTANCE 500
 
 struct BoneDesc
 {
@@ -94,6 +95,11 @@ struct TweenDesc
 	KeyframeDesc next;
 };
 
+struct InstancedTweedDesc
+{
+	TweenDesc tweens[MAX_MODEL_INSTANCE];
+};
+
 class RenderManager
 {
 	DECLARE_SINGLE(RenderManager);
@@ -121,7 +127,7 @@ public:
 	void PushKeyframeData(const KeyframeDesc& desc);
 
 	// Tween 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
-	void PushTweenData(const TweenDesc& desc);
+	void PushTweenData(const InstancedTweedDesc& desc);
 
 private:
 	// 셰이더마다 연결해줘야 하는 것들이 달라져야 합니다.
@@ -162,8 +168,8 @@ private:
 	ComPtr<ID3DX11EffectConstantBuffer> _keyframeEffectBuffer;
 
 	// Tween 애니메이션 재생과 관련된 정보 또한 설정 가능하도록 변수럴 선언해줍니다.
-	TweenDesc _tweenDesc;
-	shared_ptr<ConstantBuffer<TweenDesc>> _tweenBuffer;
+	InstancedTweedDesc _tweenDesc;
+	shared_ptr<ConstantBuffer<InstancedTweedDesc>> _tweenBuffer;
 	ComPtr<ID3DX11EffectConstantBuffer> _tweenEffectBuffer;
 
 };

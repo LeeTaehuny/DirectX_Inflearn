@@ -21,11 +21,22 @@ public:
 	~ModelAnimator();
 
 	virtual void Update() override;
+	// Tween Data는 각 모델마다 따로 들고 있어야 하는 정보입니다. (인스턴싱 불가능)
+	// -> 업데이트 함수를 추가로 생성합니다.
+	void UpdateTweenData();
 
 	// 모델을 설정하기 위한 함수를 선언합니다.
 	void SetModel(shared_ptr<Model> model);
 	// Pass 정보를 설정하기 위한 함수를 정의합니다.
 	void SetPass(uint8 pass) { _pass = pass; }
+
+	void RenderInstancing(shared_ptr<class InstancingBuffer>& buffer);
+
+	// 인스턴스의 ID를 반환하기 위한 함수를 선언합니다.
+	InstanceID GetInstanceID();
+	// TweenDesc를 반환하기 위한 함수를 선언합니다.
+	TweenDesc& GetTweenDesc() { return _tweenDesc; }
+
 
 private:
 	// 텍스처를 생성하기 위한 함수를 선언합니다.
@@ -44,8 +55,6 @@ private:
 	// 실제 GPU에 넘겨주기 위한 SRV를 저장하기 위한 변수를 선언합니다.
 	ComPtr<ID3D11ShaderResourceView> _srv;
 
-	// 키 프레임 정보를 저장하기 위한 변수를 선언합니다.
-	KeyframeDesc _keyframeDesc;
 	// 두 개의 키 프레임 정보를 저장하기 위한 변수를 선언합니다.
 	TweenDesc _tweenDesc;
 
