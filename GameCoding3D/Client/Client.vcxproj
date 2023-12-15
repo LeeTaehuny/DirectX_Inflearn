@@ -26,6 +26,7 @@
     <ClInclude Include="MeshInstancingDemo.h" />
     <ClInclude Include="ModelInstancingDemo.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RenderDemo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimInstancingDemo.cpp" />
@@ -38,10 +39,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RenderDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Shaders\00. Global.fx" />
     <FxCompile Include="..\Shaders\00. Light.fx" />
+    <FxCompile Include="..\Shaders\00. Render.fx" />
     <FxCompile Include="..\Shaders\08. GlobalTest.fx" />
     <FxCompile Include="..\Shaders\09. Lighting_Ambient.fx" />
     <FxCompile Include="..\Shaders\10. Lighting_Diffuse.fx" />
@@ -57,6 +60,7 @@
     <FxCompile Include="..\Shaders\20. MeshInstancingDemo.fx" />
     <FxCompile Include="..\Shaders\21. ModelInstancingDemo.fx" />
     <FxCompile Include="..\Shaders\22. AnimInstancingDemo.fx" />
+    <FxCompile Include="..\Shaders\23. RenderDemo.fx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -1,0 +1,20 @@
+#include "00. Global.fx"
+#include "00. Light.fx"
+#include "00. Render.fx"
+
+
+// PS
+float4 PS(MeshOutput input) : SV_TARGET
+{
+	float4 color = DiffuseMap.Sample(LinearSampler, input.uv);
+
+	return color;
+}
+
+// Effect11
+technique11 T0
+{
+	PASS_VP(P0, VS_Mesh, PS)
+	PASS_VP(P1, VS_Model, PS)
+	PASS_VP(P2, VS_Animation, PS)
+};
