@@ -18,6 +18,9 @@ Camera::~Camera()
 void Camera::Update()
 {
 	UpdateMatrix();
+
+	// 매 프레임마다 글로벌 정보가 업데이트되도록 설정해줍니다.
+	RENDER->PushGlobalData(Camera::S_MatView, Camera::S_MatProjection);
 }
 
 void Camera::UpdateMatrix()

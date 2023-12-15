@@ -11,8 +11,10 @@
 #include <array>
 #include <vector>
 #include <list>
-#include <map>
+#include <map> // 키와 데이터가 다른 경우 사용
+#include <set> // 키와 데이터가 동일한 경우 사용
 #include <unordered_map>
+#include <unordered_set>
 #include <algorithm>
 using namespace std;
 
@@ -68,6 +70,7 @@ using namespace Microsoft::WRL;
 #include "RenderManager.h"
 #include "InstancingManager.h"
 #include "ImGuiManager.h"
+#include "SceneManager.h"
 
 // Engine
 #include "VertexData.h"

@@ -2,7 +2,7 @@
 #include "Main.h"
 #include "Engine/Game.h"
 
-#include "RenderDemo.h"
+#include "SceneDemo.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	desc.height = 600;
 	desc.clearColor = Color(0.0f, 0.0f, 0.0f, 0.0f);
 
-	desc.app = make_shared<RenderDemo>();
+	desc.app = make_shared<SceneDemo>();
 
 	GAME->Run(desc);
 

@@ -51,6 +51,9 @@
     <ClCompile Include="RenderDemo.cpp">
       <Filter>Game\Week3</Filter>
     </ClCompile>
+    <ClCompile Include="SceneDemo.cpp">
+      <Filter>Game\Week3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -75,6 +78,9 @@
       <Filter>Game\Week3</Filter>
     </ClInclude>
     <ClInclude Include="RenderDemo.h">
+      <Filter>Game\Week3</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDemo.h">
       <Filter>Game\Week3</Filter>
     </ClInclude>
   </ItemGroup>

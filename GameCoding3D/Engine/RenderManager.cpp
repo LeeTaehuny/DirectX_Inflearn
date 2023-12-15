@@ -54,7 +54,7 @@ void RenderManager::Init(shared_ptr<Shader> shader)
 void RenderManager::Update()
 {
 	// 매 프레임마다 글로벌 정보가 업데이트되도록 설정해줍니다.
-	PushGlobalData(Camera::S_MatView, Camera::S_MatProjection);
+	//PushGlobalData(Camera::S_MatView, Camera::S_MatProjection);
 }
 
 void RenderManager::PushGlobalData(const Matrix& view, const Matrix& projection)
