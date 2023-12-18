@@ -48,6 +48,9 @@
     <ClCompile Include="RawBufferDemo.cpp">
       <Filter>Game\Week4</Filter>
     </ClCompile>
+    <ClCompile Include="GroupDemo.cpp">
+      <Filter>Game\Week4</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -63,6 +66,9 @@
       <Filter>Game\Week3</Filter>
     </ClInclude>
     <ClInclude Include="RawBufferDemo.h">
+      <Filter>Game\Week4</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupDemo.h">
       <Filter>Game\Week4</Filter>
     </ClInclude>
   </ItemGroup>
@@ -125,6 +131,9 @@
       <Filter>Shaders\Common</Filter>
     </FxCompile>
     <FxCompile Include="..\Shaders\24. RawBufferDemo.fx">
+      <Filter>Shaders\Week4</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\25. GroupDemo.fx">
       <Filter>Shaders\Week4</Filter>
     </FxCompile>
   </ItemGroup>
