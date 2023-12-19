@@ -9,6 +9,9 @@ public:
 	~Texture();
 
 	ComPtr<ID3D11ShaderResourceView> GetComPtr() { return _shaderResourveView; }
+	ComPtr<ID3D11Texture2D> GetTexture2D();
+
+	void SetSRV(ComPtr<ID3D11ShaderResourceView> srv) { _shaderResourveView = srv; }
 
 	virtual void Load(const wstring& path) override;
 
