@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include "Component.h"
+#include "ConstantBuffer.h"
+#include "BindShaderDesc.h"
 
 class Model;
 
@@ -29,6 +31,8 @@ public:
 	void SetModel(shared_ptr<Model> model);
 	// Pass 정보를 설정하기 위한 함수를 정의합니다.
 	void SetPass(uint8 pass) { _pass = pass; }
+
+	shared_ptr<Shader> GetShader() { return _shader; }
 
 	void RenderInstancing(shared_ptr<class InstancingBuffer>& buffer);
 

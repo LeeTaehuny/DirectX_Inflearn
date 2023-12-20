@@ -15,7 +15,7 @@ void Material::Update()
 	if (_shader == nullptr) return;
 
 	// Material 정보를 셰이더에 Push합니다.
-	RENDER->PushMaterialData(_desc);
+	_shader->PushMaterialData(_desc);
 
 	// 만약 diffuseMap이 존재한다면?
 	if (_diffuseMap)

@@ -1,6 +1,7 @@
 #pragma once
 #include "Pass.h"
 #include "Technique.h"
+#include "BindShaderDesc.h"
 
 struct ShaderDesc
 {
@@ -53,6 +54,57 @@ private:
 	D3DX11_EFFECT_DESC _effectDesc;
 	shared_ptr<StateBlock> _initialStateBlock;
 	vector<Technique> _techniques;
+
+public:
+	// 전역 데이터(V, P)를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushGlobalData(const Matrix& view, const Matrix& projection);
+	// 위치 데이터(W)를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushTransformData(const TransformDesc& desc);
+	// 빛 정보를 셰이더에 Push하기 위한 함수들을 선언합니다.
+	void PushLightData(const LightDesc& desc);
+	void PushMaterialData(const MaterialDesc& desc);
+	// Bone 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushBoneData(const BoneDesc& desc);
+	// Keyframe 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushKeyframeData(const KeyframeDesc& desc);
+	// Tween 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushTweenData(const InstancedTweedDesc& desc);
+
+private:
+	// 전역으로 프레임마다 한 번만 세팅하는 정보들을 저장하기 위한 변수를 선언합니다.
+	GlobalDesc _globalDesc;
+	// 전역 정보를 GPU에 넘겨주기 위한 상수 버퍼를 선언합니다.
+	shared_ptr<ConstantBuffer<GlobalDesc>> _globalBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _globalEffectBuffer;
+
+	// W와 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
+	TransformDesc _transformDesc;
+	shared_ptr<ConstantBuffer<TransformDesc>> _transformBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _transformEffectBuffer;
+
+	// Light와 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
+	LightDesc _lightDesc;
+	shared_ptr<ConstantBuffer<LightDesc>> _lightBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _lightEffectBuffer;
+
+	MaterialDesc _materialDesc;
+	shared_ptr<ConstantBuffer<MaterialDesc>> _materialBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _materialEffectBuffer;
+
+	// Bone와 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
+	BoneDesc _boneDesc;
+	shared_ptr<ConstantBuffer<BoneDesc>> _boneBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _boneEffectBuffer;
+
+	// Keyframe과 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
+	KeyframeDesc _keyframeDesc;
+	shared_ptr<ConstantBuffer<KeyframeDesc>> _keyframeBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _keyframeEffectBuffer;
+
+	// Tween 애니메이션 재생과 관련된 정보 또한 설정 가능하도록 변수럴 선언해줍니다.
+	InstancedTweedDesc _tweenDesc;
+	shared_ptr<ConstantBuffer<InstancedTweedDesc>> _tweenBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _tweenEffectBuffer;
 };
 
 class ShaderManager

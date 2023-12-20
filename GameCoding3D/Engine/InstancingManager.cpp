@@ -164,7 +164,7 @@ void InstancingManager::RenderAnimRenderer(vector<shared_ptr<GameObject>> gameOb
 			tweenDesc->tweens[i] = desc;
 		}
 
-		RENDER->PushTweenData(*tweenDesc.get());
+		vec[0]->GetModelAnimator()->GetShader()->PushTweenData(*tweenDesc.get());
 
 		// 모든 데이터를 저장했습니다.
 		// * 실제로 화면에 그려줍니다. (그려주는 것은 한 번만 실행하도록 합니다.)

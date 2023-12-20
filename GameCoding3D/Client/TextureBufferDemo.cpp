@@ -85,7 +85,7 @@ void TextureBufferDemo::Init()
 		}
 	}
 	
-	RENDER->Init(_shader);
+	//RENDER->Init(_shader);
 }
 
 void TextureBufferDemo::Update()
