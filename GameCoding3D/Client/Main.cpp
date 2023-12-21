@@ -2,7 +2,7 @@
 #include "Main.h"
 #include "Engine/Game.h"
 
-#include "TextureBufferDemo.h"
+#include "ViewportDemo.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -14,9 +14,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	desc.hWnd = NULL;
 	desc.width = 800;
 	desc.height = 600;
-	desc.clearColor = Color(0.0f, 0.0f, 0.0f, 0.0f);
+	desc.clearColor = Color(0.5f, 0.5f, 0.5f, 0.5f);
 
-	desc.app = make_shared<TextureBufferDemo>();
+	desc.app = make_shared<ViewportDemo>();
 
 	GAME->Run(desc);
 
