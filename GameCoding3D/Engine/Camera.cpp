@@ -29,8 +29,8 @@ void Camera::UpdateMatrix()
 	Vec3 focusPosition = eyePosition + GetTransform()->GetLook();
 	Vec3 upDirection = GetTransform()->GetUp();
 	S_MatView = ::XMMatrixLookAtLH(eyePosition, focusPosition, upDirection);
-
-	//S_MatView = GetTransform()->GetWorldMatrix().Invert();
+	_matView = S_MatView;
 
 	S_MatProjection = ::XMMatrixPerspectiveFovLH(_fov, _width / _height, _near, _far);
+	_matProjection = S_MatProjection;
 }

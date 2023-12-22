@@ -1,5 +1,8 @@
 ﻿#include "pch.h"
 #include "Scene.h"
+#include "GameObject.h"
+#include "BaseCollider.h"
+#include "Camera.h"
 
 void Scene::Start()
 {
@@ -56,4 +59,76 @@ void Scene::Remove(shared_ptr<GameObject> object)
 	_objects.erase(object);
 	_cameras.erase(object);
 	_lights.erase(object);
+}
+
+shared_ptr<GameObject> Scene::Pick(int32 screenX, int32 screenY)
+{
+	// 스크린 좌표를 3D 좌표로 변환해주도록 합니다.
+	// * 카메라를 가져옵니다.
+	shared_ptr<Camera> camera = GetCamera()->GetCamera();
+
+	// viewport의 크기를 가져옵니다.
+	float width = GRAPHICS->GetViewport().GetWidth();
+	float height = GRAPHICS->GetViewport().GetHeight();
+
+	// 카메라로부터 Projection 변환 행렬을 가져옵니다.
+	Matrix projectionMatrix = camera->GetProjectionMatrix();
+	// 카메라로부터 View 변환 행렬을 가져옵니다.
+	Matrix viewMatrix = camera->GetViewMatrix();
+	// view 변환 행렬의 역행렬을 구해줍니다.
+	Matrix viewMatrixInv = viewMatrix.Invert();
+
+	// x, y좌표를 view space의 좌표로 변경합니다.
+	float viewX = (+2.0f * screenX / width - 1.0f) / projectionMatrix(0, 0);
+	float viewY = (-2.0f * screenY / height + 1.0f) / projectionMatrix(1, 1);
+
+	// 모든 게임 오브젝트를 가져옵니다.
+	const auto& gameObjects = GetObjects();
+
+	// 최소 거리를 저장하기 위한 변수
+	float minDistance = FLT_MAX;
+	
+	// 최종 결과로 충돌된 오브젝트를 저장하기 위한 변수
+	shared_ptr<GameObject> picked;
+
+	// 모든 GameObject를 순회합니다.
+	for (auto& gameObject : gameObjects)
+	{
+		// 해당 물체에 콜라이더가 존재하지 않으면 무시합니다.
+		if (gameObject->GetCollider() == nullptr) continue;
+
+		// ViewSpace에서 Ray를 정의합니다. (위치와 방향)
+		// * rayOrigin : (0, 0, 0) -> view space 이므로 월드 공간에서는 카메라의 좌표를 의미합니다.
+		Vec4 rayOrigin = Vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		Vec4 rayDir = Vec4(viewX, viewY, 1.0f, 0.0f);
+
+		// view 공간에 있는 Ray을 world 공간으로 변환해줍니다. (위치와 방향)
+		// (view Space에 view Matrix의 역행렬을 곱해 world Space로 변환)
+		Vec3 worldRayOrigin = XMVector3TransformCoord(rayOrigin, viewMatrixInv);
+		Vec3 worldRayDir = XMVector3TransformNormal(rayDir, viewMatrixInv);
+
+		// worldRayDir은 순수한 방향 벡터이므로 정규화를 시켜줍니다.
+		worldRayDir.Normalize();
+
+		// 실제 world 공간에 위치한 Ray를 기존 정보를 토대로 생성합니다.
+		Ray ray = Ray(worldRayOrigin, worldRayDir);
+
+		// OutParams
+		float distance = 0.0f;
+		// 물체가 ray와 충돌하지 않는다면 무시합니다.
+		if (gameObject->GetCollider()->Intersects(ray, OUT distance) == false) continue;
+
+		// 만약 구해준 distance가 최소 거리보다 작다면?
+		if (distance < minDistance)
+		{
+			// 최소 거리를 업데이트 합니다.
+			minDistance = distance;
+			// 충돌 결과 반환용 변수에 최소 거리 오브젝트를 저장합니다.
+			picked = gameObject;
+		}
+	}
+
+	// 모든 물체를 순회했습니다.
+	// * picked 변수에는 결국 ray와 충돌한 물체 중 최소 거리의 물체가 저장되어 있으며, 이를 반환해줍니다.
+	return picked;
 }

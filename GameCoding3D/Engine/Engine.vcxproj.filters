@@ -43,6 +43,9 @@
     <Filter Include="05. ComputeShader\Buffer">
       <UniqueIdentifier>{a220ca4a-1411-48fd-b17c-226a5cb52f57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Component\Collision">
+      <UniqueIdentifier>{7697d6be-64a6-4005-90d9-bd5b4ecadb53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -216,6 +219,12 @@
     <ClInclude Include="Viewport.h">
       <Filter>01. Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="BaseCollider.h">
+      <Filter>04. Component\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>04. Component\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -376,6 +385,12 @@
     </ClCompile>
     <ClCompile Include="Viewport.cpp">
       <Filter>01. Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseCollider.cpp">
+      <Filter>04. Component\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>04. Component\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
