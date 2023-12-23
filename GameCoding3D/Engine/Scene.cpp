@@ -37,6 +37,8 @@ void Scene::LateUpdate()
 	{
 		object->LateUpdate();
 	}
+
+	CheckCollision();
 }
 
 void Scene::Add(shared_ptr<GameObject> object)
@@ -131,4 +133,36 @@ shared_ptr<GameObject> Scene::Pick(int32 screenX, int32 screenY)
 	// 모든 물체를 순회했습니다.
 	// * picked 변수에는 결국 ray와 충돌한 물체 중 최소 거리의 물체가 저장되어 있으며, 이를 반환해줍니다.
 	return picked;
+}
+
+void Scene::CheckCollision()
+{
+	// 콜라이더들을 관리하기 위한 벡터 컨테이너를 생성합니다.
+	vector<shared_ptr<BaseCollider>> colliders;
+
+	// 모든 오브젝트를 순회하며 콜라이더를 벡터에 추가합니다.
+	for (shared_ptr<GameObject> object : _objects)
+	{
+		// 만약 오브젝트가 콜라이더를 가지고 있지 않는다면 무시하기
+		if (object->GetCollider() == nullptr) continue;
+
+		// 콜라이더 추가
+		colliders.push_back(object->GetCollider());
+	}
+
+	// 찾은 콜라이더들을 바탕으로 충돌이 일어나는지 체크해줍니다.
+	// * BruteForce
+	for (int32 i = 0; i < colliders.size(); i++)
+	{
+		for (int32 j = i + 1; j < colliders.size(); j++)
+		{
+			shared_ptr<BaseCollider>& other = colliders[j];
+
+			if (colliders[i]->Intersects(other))
+			{
+				// 충돌이 일어난 경우 여기서 추가 코드들을 실행하면 됩니다.
+				int a = 3;
+			}
+		}
+	}
 }

@@ -17,6 +17,8 @@ public:
 
 	// RayCasting
 	virtual bool Intersects(Ray& ray, OUT float& distance) = 0;
+	// Other Collider
+	virtual bool Intersects(shared_ptr<BaseCollider>& other) = 0;
 
 	ColliderType GetColliderType() { return _colliderType; }
 

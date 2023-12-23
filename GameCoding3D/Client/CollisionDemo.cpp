@@ -15,6 +15,8 @@
 #include "Viewport.h"
 #include "SphereCollider.h"
 #include "Scene.h"
+#include "AABBBoxCollider.h"
+#include "OBBBoxCollider.h"
 
 void CollisionDemo::Init()
 {
@@ -47,50 +49,82 @@ void CollisionDemo::Init()
 		CUR_SCENE->Add(light);
 	}
 	
-	// Mesh
+	// Material
 	{
-		{
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(_shader);
-			
-			auto texture = RESOURCES->Load<Texture>(L"Veigar", L"..\\Resources\\Textures\\veigar.jpg");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(_shader);
 
-			material->SetDiffuseMap(texture);
-			MaterialDesc& desc = material->GetMaterialDesc();
-			desc.ambient = Vec4(1.f);
-			desc.diffuse = Vec4(1.f);
-			desc.specular = Vec4(1.f);
-			RESOURCES->Add(L"Veigar", material);
-		}
+		auto texture = RESOURCES->Load<Texture>(L"Veigar", L"..\\Resources\\Textures\\veigar.jpg");
 
-		{
-			auto obj = make_shared<GameObject>();
-			obj->GetOrAddTransform()->SetPosition(Vec3(0.0f, 0.0f, 0.0f));
-			obj->AddComponent(make_shared<MeshRenderer>());
-
-			// Set Material
-			obj->GetMeshRenderer()->SetMaterial(RESOURCES->Get<Material>(L"Veigar"));
-
-			// Set Mesh
-			auto mesh = RESOURCES->Get<Mesh>(L"Sphere");
-			obj->GetMeshRenderer()->SetMesh(mesh);
-			obj->GetMeshRenderer()->SetPass(0);
-
-			// Collider
-			{
-				auto collider = make_shared<SphereCollider>();
-				collider->SetRadius(0.5f);
-				obj->AddComponent(collider);
-			}
-
-			// 생성한 오브젝트를 배열에 추가
-			CUR_SCENE->Add(obj);
-		}
-
-		
+		material->SetDiffuseMap(texture);
+		MaterialDesc& desc = material->GetMaterialDesc();
+		desc.ambient = Vec4(1.f);
+		desc.diffuse = Vec4(1.f);
+		desc.specular = Vec4(1.f);
+		RESOURCES->Add(L"Veigar", material);
 	}
-	
-	//RENDER->Init(_shader);
+
+	// Mesh 1
+	{
+		auto obj = make_shared<GameObject>();
+		obj->GetOrAddTransform()->SetLocalPosition(Vec3(3.f, 0.f, 0.f));
+		obj->AddComponent(make_shared<MeshRenderer>());
+
+		// Set Material
+		obj->GetMeshRenderer()->SetMaterial(RESOURCES->Get<Material>(L"Veigar"));
+
+		// Set Mesh
+		auto mesh = RESOURCES->Get<Mesh>(L"Sphere");
+		obj->GetMeshRenderer()->SetMesh(mesh);
+		obj->GetMeshRenderer()->SetPass(0);
+
+		// Collider
+		auto collider = make_shared<SphereCollider>();
+		collider->SetRadius(0.5f);
+		obj->AddComponent(collider);
+
+		// Script
+		obj->AddComponent(make_shared<MoveScript>());
+
+		// 생성한 오브젝트를 배열에 추가
+		CUR_SCENE->Add(obj);
+	}
+
+	// Mesh 2
+	{
+		auto obj = make_shared<GameObject>();
+		obj->GetOrAddTransform()->SetLocalPosition(Vec3(0.f));
+		obj->AddComponent(make_shared<MeshRenderer>());
+
+		// Set Material
+		obj->GetMeshRenderer()->SetMaterial(RESOURCES->Get<Material>(L"Veigar"));
+
+		// Set Mesh
+		auto mesh = RESOURCES->Get<Mesh>(L"Cube");
+		obj->GetMeshRenderer()->SetMesh(mesh);
+		obj->GetMeshRenderer()->SetPass(0);
+
+		// Collider AABB
+		//{
+		//	auto collider = make_shared<AABBBoxCollider>();
+		//	collider->GetBoundingBox().Extents = Vec3(0.5f);
+		//	obj->AddComponent(collider);
+		//
+		//}
+
+		// Collider OBB
+		{
+			obj->GetOrAddTransform()->SetRotation(Vec3(30, 45, 0));
+
+			auto collider = make_shared<OBBBoxCollider>();
+			collider->GetBoundingBox().Extents = Vec3(0.5f);
+			collider->GetBoundingBox().Orientation = Quaternion::CreateFromYawPitchRoll(45, 0, 30);
+			obj->AddComponent(collider);
+		}
+
+		// 생성한 오브젝트를 배열에 추가
+		CUR_SCENE->Add(obj);
+	}
 }
 
 void CollisionDemo::Update()
@@ -115,4 +149,11 @@ void CollisionDemo::Update()
 
 void CollisionDemo::Render()
 {
+}
+
+void MoveScript::Update()
+{
+	auto pos = GetTransform()->GetPosition();
+	pos.x -= DT * 1.0f;
+	GetTransform()->SetPosition(pos);
 }

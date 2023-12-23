@@ -8,7 +8,11 @@ public:
 	virtual ~SphereCollider() override;
 
 	virtual void Update() override;
+
+	// RayCasting
 	virtual bool Intersects(Ray& ray, OUT float& distance) override;
+	// Other Collider
+	virtual bool Intersects(shared_ptr<BaseCollider>& other) override;
 
 	void SetRadius(float radius) { _radius = radius; }
 	BoundingSphere& GetBoundingSphere() { return _boundingSphere; }
