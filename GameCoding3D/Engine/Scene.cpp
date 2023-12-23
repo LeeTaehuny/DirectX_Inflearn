@@ -4,6 +4,8 @@
 #include "BaseCollider.h"
 #include "Camera.h"
 
+#include "Terrain.h"
+
 void Scene::Start()
 {
 	unordered_set<shared_ptr<GameObject>> objects = _objects;
@@ -127,6 +129,30 @@ shared_ptr<GameObject> Scene::Pick(int32 screenX, int32 screenY)
 			minDistance = distance;
 			// 충돌 결과 반환용 변수에 최소 거리 오브젝트를 저장합니다.
 			picked = gameObject;
+		}
+	}
+
+	// Terrain Picking(부하가 심함)
+	{
+		for (auto& gameObject : gameObjects)
+		{
+			// 만약 해당 오브젝트가 Terrain 컴포넌트를 들고 있지 않다면 무시하기
+			if (gameObject->GetTerrain() == nullptr) continue;
+
+			Vec3 pickPos;
+			float distance = 0.0f;
+
+			// 해당 오브젝트의 Terrain의 Pick 결과가 false라면 무시하기
+			if (gameObject->GetTerrain()->Pick(screenX, screenY, OUT pickPos, OUT distance) == false) continue;
+		
+			// 만약 구해준 distance가 최소 거리보다 작다면?
+			if (distance < minDistance)
+			{
+				// 최소 거리를 업데이트 합니다.
+				minDistance = distance;
+				// 충돌 결과 반환용 변수에 최소 거리 오브젝트를 저장합니다.
+				picked = gameObject;
+			}
 		}
 	}
 

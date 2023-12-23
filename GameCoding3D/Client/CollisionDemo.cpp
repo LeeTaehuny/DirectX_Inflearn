@@ -17,6 +17,7 @@
 #include "Scene.h"
 #include "AABBBoxCollider.h"
 #include "OBBBoxCollider.h"
+#include "Terrain.h"
 
 void CollisionDemo::Init()
 {
@@ -62,6 +63,16 @@ void CollisionDemo::Init()
 		desc.diffuse = Vec4(1.f);
 		desc.specular = Vec4(1.f);
 		RESOURCES->Add(L"Veigar", material);
+	}
+
+	// Terrain
+	{
+		auto obj = make_shared<GameObject>();
+		obj->AddComponent(make_shared <Terrain>());
+		obj->GetTerrain()->Create(10, 10, RESOURCES->Get<Material>(L"Veigar"));
+
+		// 생성한 오브젝트를 배열에 추가
+		CUR_SCENE->Add(obj);
 	}
 
 	// Mesh 1
