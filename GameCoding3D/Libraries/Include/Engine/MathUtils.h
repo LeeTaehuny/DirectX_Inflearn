@@ -89,7 +89,8 @@ struct MathUtils
 	static bool Raycast(const AABB3D& aabb, const Ray3D& ray, OUT float& distance);
 
 
-	/*********** Raycast (Triangle) ***********/
+	/*********** Triangle ***********/
 	static bool PointInTriangle(const Point3D& p, const Triangle3D& t);
+
 };
 

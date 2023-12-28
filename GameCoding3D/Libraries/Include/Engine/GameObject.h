@@ -35,8 +35,14 @@ public:
 	shared_ptr<Transform> GetOrAddTransform();
 	void AddComponent(shared_ptr<Component> component);
 
+	void SetLayerIndex(uint8 layer) { _layerIndex = layer; }
+	uint8 GetLayerIndex() { return _layerIndex; }
+
 protected:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
 	vector<shared_ptr<MonoBehaviour>> _scripts;
+
+	// 모든 물체들이 자신만의 LayerIndex(카메라 출력)를 가지도록 합니다.
+	uint8 _layerIndex = 0;
 };
 

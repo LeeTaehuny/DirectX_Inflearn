@@ -95,7 +95,7 @@ void CollisionDemo::Init()
 		obj->AddComponent(collider);
 
 		// Script
-		obj->AddComponent(make_shared<MoveScript>());
+		//obj->AddComponent(make_shared<MoveScript>());
 
 		// 생성한 오브젝트를 배열에 추가
 		CUR_SCENE->Add(obj);
@@ -162,9 +162,9 @@ void CollisionDemo::Render()
 {
 }
 
-void MoveScript::Update()
-{
-	auto pos = GetTransform()->GetPosition();
-	pos.x -= DT * 1.0f;
-	GetTransform()->SetPosition(pos);
-}
+//void MoveScript::Update()
+//{
+//	auto pos = GetTransform()->GetPosition();
+//	pos.x -= DT * 1.0f;
+//	GetTransform()->SetPosition(pos);
+//}
