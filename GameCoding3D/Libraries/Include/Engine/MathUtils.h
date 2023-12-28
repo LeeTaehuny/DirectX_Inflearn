@@ -78,5 +78,18 @@ struct MathUtils
 
 	// Plane2Plane
 	static bool PlanePlane(const Plane3D& plane1, const Plane3D& plane2);
+
+
+	/*********** Raycast ***********/
+
+	// Sphere - Ray
+	static bool Raycast(const Sphere3D& sphere, const Ray3D& ray, OUT float& distance);
+
+	// AABB - Ray (Cyrus-Beck clipping 알고리즘)
+	static bool Raycast(const AABB3D& aabb, const Ray3D& ray, OUT float& distance);
+
+
+	/*********** Raycast (Triangle) ***********/
+	static bool PointInTriangle(const Point3D& p, const Triangle3D& t);
 };
 

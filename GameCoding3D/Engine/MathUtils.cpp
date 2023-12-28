@@ -482,3 +482,102 @@ bool MathUtils::PlanePlane(const Plane3D& plane1, const Plane3D& plane2)
 {
 	return plane1.normal.Dot(plane2.normal) == 1;
 }
+
+bool MathUtils::Raycast(const Sphere3D& sphere, const Ray3D& ray, OUT float& distance)
+{
+	// Ray의 원점으로부터 sphere의 위치까지 향하는 벡터를 생성합니다.
+	Vec3 e = sphere.position - ray.origin;
+
+	// sphere의 반지름 제곱의 값을 구해줍니다.
+	float rSq = sphere.radius * sphere.radius;
+	// e벡터의 길이 제곱의 값을 구해줍니다.
+	float eSq = e.LengthSquared();
+
+	// e벡터와 광선의 방향을 내적합니다.
+	float a = e.Dot(ray.direction);
+
+	// 피타고라스 공식을 이용한 거리 구하기
+	// * e가 빗변이므로 삼각형 abe의 b변의 제곱을 구할 수 있음
+	float bSq = eSq - (a * a);
+	// * r이 빗변이므로 삼각형 rbf의 f변의 제곱을 구할 수 있음
+	float f = sqrt(rSq - bSq);
+
+	// 충돌하지 않은 경우
+	// * 반지름의 제곱보다 수선의 길이가 긴 경우이므로 충돌 X
+	if (rSq - bSq < 0.0f) return false;
+
+	// 광선이 Sphere 내부에서 시작된 경우
+	if (eSq < rSq)
+	{
+		distance = a + f;
+		return true;
+	}
+
+	// 원의 외부에서 충돌한 경우
+	distance = a - f;
+	return true;
+}
+
+bool MathUtils::Raycast(const AABB3D& aabb, const Ray3D& ray, OUT float& distance)
+{
+	// AABB의 min, max값을 구해줍니다.
+	Vec3 min = AABB3D::GetMin(aabb);
+	Vec3 max = AABB3D::GetMax(aabb);
+
+	float t1 = (min.x - ray.origin.x) / ray.direction.x;
+	float t2 = (max.x - ray.origin.x) / ray.direction.x;
+
+	float t3 = (min.y - ray.origin.y) / ray.direction.y;
+	float t4 = (max.y - ray.origin.y) / ray.direction.y;
+
+	float t5 = (min.z - ray.origin.z) / ray.direction.z;
+	float t6 = (max.z - ray.origin.z) / ray.direction.z;
+
+	// Largest min
+	float tmin = fmaxf(
+		fmaxf(
+			fminf(t1, t2),
+			fminf(t3, t4)
+		),
+		fminf(t5, t6)
+	);
+
+	// Smallest max value
+	float tmax = fminf(
+		fminf(
+			fmaxf(t1, t2),
+			fmaxf(t3, t4)
+		),
+		fmaxf(t5, t6)
+	);
+
+	if (tmax < 0) return false;
+	if (tmin > tmax) return false;
+	if (tmin < 0.0f)
+	{
+		distance = tmax;
+		return true;
+	}
+
+	distance = tmin;
+	return true;
+}
+
+bool MathUtils::PointInTriangle(const Point3D& p, const Triangle3D& t)
+{
+	// 점에서 Trangle의 각 꼭짓점 a, b, c로 향하는 벡터를 만들어줍니다.
+	Vec3 a = t.a - p;
+	Vec3 b = t.b - p;
+	Vec3 c = t.c - p;
+
+	// 각 벡터를 서로 외적한 결과를 저장합니다. (외적한 결과는 모두 동일)
+	Vec3 normPBC = b.Cross(c);
+	Vec3 normPCA = c.Cross(a);
+	Vec3 normPAB = a.Cross(b);
+
+	// 만약 나온 결과들을 내적한 것이 0보다 작다면(반대 방향의 벡터)? -> 외적의 방향이 달라진 것이므로 false 반환
+	if (normPBC.Dot(normPCA) < 0.0f) return false;
+	else if (normPBC.Dot(normPAB) < 0.0f) return false;
+
+	return true;
+}
