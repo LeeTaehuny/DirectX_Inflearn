@@ -49,6 +49,9 @@
     <Filter Include="99. Headers\Math">
       <UniqueIdentifier>{01cd06f8-20bd-46aa-9191-8af672c285d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. UI &amp; Effect">
+      <UniqueIdentifier>{bc2e3f00-2e03-4914-9c5f-4da9ccd8747e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -243,6 +246,9 @@
     <ClInclude Include="MathUtils.h">
       <Filter>99. Headers\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>06. UI &amp; Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -424,6 +430,9 @@
     </ClCompile>
     <ClCompile Include="MathUtils.cpp">
       <Filter>99. Headers\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>06. UI &amp; Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

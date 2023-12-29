@@ -2,7 +2,7 @@
 #include "Main.h"
 #include "Engine/Game.h"
 
-#include "OrthographicDemo.h"
+#include "ButtonDemo.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	desc.height = 600;
 	desc.clearColor = Color(0.5f, 0.5f, 0.5f, 0.5f);
 
-	desc.app = make_shared<OrthographicDemo>();
+	desc.app = make_shared<ButtonDemo>();
 
 	GAME->Run(desc);
 

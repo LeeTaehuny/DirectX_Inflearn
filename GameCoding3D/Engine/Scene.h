@@ -17,6 +17,8 @@ public:
 
 	shared_ptr<GameObject> Pick(int32 screenX, int32 screenY);
 
+	void PickUI();
+
 	void CheckCollision();
 
 private:

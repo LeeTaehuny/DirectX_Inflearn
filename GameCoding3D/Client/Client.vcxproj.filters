@@ -69,6 +69,9 @@
     <ClCompile Include="OrthographicDemo.cpp">
       <Filter>Game\Week5</Filter>
     </ClCompile>
+    <ClCompile Include="ButtonDemo.cpp">
+      <Filter>Game\Week5</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -102,6 +105,9 @@
       <Filter>Game\Week5</Filter>
     </ClInclude>
     <ClInclude Include="OrthographicDemo.h">
+      <Filter>Game\Week5</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonDemo.h">
       <Filter>Game\Week5</Filter>
     </ClInclude>
   </ItemGroup>

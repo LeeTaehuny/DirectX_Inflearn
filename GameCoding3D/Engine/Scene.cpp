@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "BaseCollider.h"
 #include "Camera.h"
+#include "Button.h"
 
 #include "Terrain.h"
 
@@ -24,6 +25,8 @@ void Scene::Update()
 	{
 		object->Update();
 	}
+
+	PickUI();
 }
 
 void Scene::LateUpdate()
@@ -126,6 +129,7 @@ shared_ptr<GameObject> Scene::Pick(int32 screenX, int32 screenY)
 	// 모든 GameObject를 순회합니다.
 	for (auto& gameObject : gameObjects)
 	{
+		if (camera->IsCulled(gameObject->GetLayerIndex())) continue;
 		// 해당 물체에 콜라이더가 존재하지 않으면 무시합니다.
 		if (gameObject->GetCollider() == nullptr) continue;
 
@@ -187,6 +191,33 @@ shared_ptr<GameObject> Scene::Pick(int32 screenX, int32 screenY)
 	// 모든 물체를 순회했습니다.
 	// * picked 변수에는 결국 ray와 충돌한 물체 중 최소 거리의 물체가 저장되어 있으며, 이를 반환해줍니다.
 	return picked;
+}
+
+void Scene::PickUI()
+{
+	// 좌클릭이 들어오지 않는다면 반환합니다.
+	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON) == false) return;
+	// UI카메라가 존재하지 않는다면 반환합니다.
+	if (GetUICamera() == nullptr) return;
+
+	// 마우스 위치를 받아옵니다.
+	POINT screenPt = INPUT->GetMousePos();
+	// UI카메라를 받아옵니다.
+	shared_ptr<Camera> camera = GetUICamera()->GetCamera();
+	// GameObject들을 받아옵니다.
+	const auto gameObjects = GetObjects();
+
+	// GameObject들을 순회하며 버튼이 있고, 영역에 마우스 위치가 들어가 있다면 해당 버튼의 이벤트를 실행합니다.
+	for (auto& gameObject : gameObjects)
+	{
+		// 버튼이 없다면 무시합니다.
+		if (gameObject->GetButton() == nullptr) continue;
+
+		if (gameObject->GetButton()->Picked(screenPt))
+		{
+			gameObject->GetButton()->InvokeOnClicked();
+		}
+	}
 }
 
 void Scene::CheckCollision()
