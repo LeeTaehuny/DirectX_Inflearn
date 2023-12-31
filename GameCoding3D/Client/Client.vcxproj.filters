@@ -34,6 +34,9 @@
     <Filter Include="Game\Week5">
       <UniqueIdentifier>{1147b946-f54c-428d-8fbf-0b13b317d3de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Week5">
+      <UniqueIdentifier>{9a67b2e9-ddd0-419a-9e13-e3d33e81d3da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -72,6 +75,9 @@
     <ClCompile Include="ButtonDemo.cpp">
       <Filter>Game\Week5</Filter>
     </ClCompile>
+    <ClCompile Include="BillBoardDemo.cpp">
+      <Filter>Game\Week5</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -108,6 +114,9 @@
       <Filter>Game\Week5</Filter>
     </ClInclude>
     <ClInclude Include="ButtonDemo.h">
+      <Filter>Game\Week5</Filter>
+    </ClInclude>
+    <ClInclude Include="BillBoardDemo.h">
       <Filter>Game\Week5</Filter>
     </ClInclude>
   </ItemGroup>
@@ -180,6 +189,9 @@
     </FxCompile>
     <FxCompile Include="..\Shaders\27. StructuredBufferDemo.fx">
       <Filter>Shaders\Week4</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\28. BillBoardDemo.fx">
+      <Filter>Shaders\Week5</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
