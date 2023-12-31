@@ -99,3 +99,24 @@ struct InstancedTweedDesc
 {
 	TweenDesc tweens[MAX_MODEL_INSTANCE];
 };
+
+struct SnowBillboardDesc
+{
+	// 눈의 색상
+	Color color = Color(1, 1, 1, 1);
+
+	// 속도
+	Vec3 velocity = Vec3(0, -5, 0);
+	// 거리
+	float drawDistance = 0;
+
+	// 위치
+	Vec3 origin = Vec3(0, 0, 0);
+	// 흔들리는 강도
+	float turbulence = 5;
+
+	// 범위
+	Vec3 extent = Vec3(0, 0, 0);
+	// 시간
+	float time;
+};

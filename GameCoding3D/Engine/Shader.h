@@ -69,6 +69,8 @@ public:
 	void PushKeyframeData(const KeyframeDesc& desc);
 	// Tween 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
 	void PushTweenData(const InstancedTweedDesc& desc);
+	// Snow 정보를 셰이더에 Push하기 위한 함수를 선언합니다.
+	void PushSnowData(const SnowBillboardDesc& desc);
 
 private:
 	// 전역으로 프레임마다 한 번만 세팅하는 정보들을 저장하기 위한 변수를 선언합니다.
@@ -101,10 +103,16 @@ private:
 	shared_ptr<ConstantBuffer<KeyframeDesc>> _keyframeBuffer;
 	ComPtr<ID3DX11EffectConstantBuffer> _keyframeEffectBuffer;
 
-	// Tween 애니메이션 재생과 관련된 정보 또한 설정 가능하도록 변수럴 선언해줍니다.
+	// Tween 애니메이션 재생과 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
 	InstancedTweedDesc _tweenDesc;
 	shared_ptr<ConstantBuffer<InstancedTweedDesc>> _tweenBuffer;
 	ComPtr<ID3DX11EffectConstantBuffer> _tweenEffectBuffer;
+
+	// Snow와 관련된 정보 또한 설정 가능하도록 변수를 선언해줍니다.
+	SnowBillboardDesc _snowDesc;
+	shared_ptr<ConstantBuffer<SnowBillboardDesc>> _snowBuffer;
+	ComPtr<ID3DX11EffectConstantBuffer> _snowEffectBuffer;
+
 };
 
 class ShaderManager
